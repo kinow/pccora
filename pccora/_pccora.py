@@ -143,19 +143,31 @@ pccora_file = Struct("pccora_file",
     pccora_header,
     pccora_identification,
     pccora_syspar,
-    GreedyRange(pccora_data)
+    Range(40, 40, pccora_data)
 )
 
 class PCCORAParser(object):
 
     def __init__(self):
-        self.header = None
+        self.result = None
 
     def parse(self, file_arg):
         fid = open(file_arg, 'rb')
-        self.header = pccora_file.parse_stream(fid)
+        self.result = pccora_file.parse_stream(fid)
         fid.close()
         return ''
 
+    def get_result(self):
+        return self.result
+
     def get_header(self):
-        return self.header
+        return self.result.pccora_header
+
+    def get_identification(self):
+        return self.result.pccora_identification
+
+    def get_syspar(self):
+        return self.result.pccora_syspar
+
+    def get_data(self):
+        return self.result.pccora_data

@@ -6,9 +6,9 @@ https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html (2015-12-05).
 
 This format is used for [radiosonde data](https://badc.nerc.ac.uk/data/ukmo-rad-hires/). According to Wikipedia,
 
->A radiosonde (Sonde is French and German for probe) is a battery-powered telemetry instrument package carried into the
+"A radiosonde (Sonde is French and German for probe) is a battery-powered telemetry instrument package carried into the
 atmosphere usually by a weather balloon that measures various atmospheric parameters and transmits them by radio to a
-ground receiver.
+ground receiver."
 
 History
 -------

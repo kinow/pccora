@@ -182,7 +182,7 @@ class PCCORAParser(object):
         """
         Parse a file, by opening it with 'rb' flags and sending it through the construct binary parser.
         """
-        with open(file_arg, 'rb'):
+        with open(file_arg, 'rb') as fid:
             self.result = pccora_file.parse_stream(fid)
 
     def parse_stream(self, stream_arg):

@@ -1,5 +1,9 @@
 from construct import *
 
+#===============================================================================
+# Construct parser objects
+#===============================================================================
+
 pccora_header = Struct("pccora_header",
     String("copyright", 20),
     ULInt16("identification_length"),
@@ -111,8 +115,7 @@ pccora_identification = Struct("pccora_identification",
     ULInt16("reference_temperature"),
     ULInt16("reference_humidity"),
 )
-import sys
-fn = lambda x: sys.stdout.write(str(dir(x)) + "\n")
+
 pccora_syspar = Struct("pccora_syspar",
     Bytes("syspar", 8087)
 )
@@ -143,31 +146,67 @@ pccora_file = Struct("pccora_file",
     pccora_header,
     pccora_identification,
     pccora_syspar,
-    Range(40, 40, pccora_data)
+    GreedyRange(pccora_data)
 )
 
 class PCCORAParser(object):
+    """
+    A PC-CORA parser, that uses the construct binary parser library to read the input data.
+
+    Users may call one of the two following methods to parse either a file (that will be read with the 'rb' flag),
+    or a file resource.
+
+    * ``parse_file()``
+    * ``parse_stream()``
+
+    Both methods fill an internal 'result' object (a construct Container). After this, users may call one of the
+    following methods to retrieve PC-CORA parts.
+
+    * ``get_header()``
+    * ``get_identification()``
+    * ``get_syspar()``
+    * ``get_data()``
+
+    Or to get the whole result.
+
+    * ``get_result()``
+    """
 
     def __init__(self):
         self.result = None
 
-    def parse(self, file_arg):
-        fid = open(file_arg, 'rb')
-        self.result = pccora_file.parse_stream(fid)
-        fid.close()
-        return ''
+    def __repr__(self):
+        return "%s(%r)" % (self.__class__.__name__, self.name)
+
+    def parse_file(self, file_arg):
+        """
+        Parse a file, by opening it with 'rb' flags and sending it through the construct binary parser.
+        """
+        with open(file_arg, 'rb'):
+            self.result = pccora_file.parse_stream(fid)
+
+    def parse_stream(self, stream_arg):
+        """
+        Parse a file, by passing the stream argument thourhg the construct binary parser.
+        """
+        self.result = pccora_file.parse_stream(stream_arg)
 
     def get_result(self):
+        """Return the parser result"""
         return self.result
 
     def get_header(self):
+        """Return the PC-CORA file header"""
         return self.result.pccora_header
 
     def get_identification(self):
+        """Return the PC-CORA file identification"""
         return self.result.pccora_identification
 
     def get_syspar(self):
+        """Return the PC-CORA file SYSPAR bytes"""
         return self.result.pccora_syspar
 
     def get_data(self):
+        """Return the PC-CORA file data array"""
         return self.result.pccora_data

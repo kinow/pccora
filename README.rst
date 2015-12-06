@@ -16,7 +16,7 @@ History
 I was asked by a co-worker to look at some Python code with a PC-CORA parser. However, he also needed some further
 work on finding these files and outputting the contents as CSV. Decided to write a module for PC-CORA inspiredby the
 original script [1], using Python3, OO and packing as a Python package to be distributed to the
-[PYPI](https://pypi.python.org/pypi)
+`PYPI <https://pypi.python.org/pypi>`.
 
 [1] https://github.com/vnoel/pycode/blob/master/pccora.py
 

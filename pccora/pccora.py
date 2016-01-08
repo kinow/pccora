@@ -142,11 +142,34 @@ pccora_data = Struct("pccora_data",
     ULInt16("radar_height")
 )
 
+hires_data = Struct("hires_data",
+    LFloat32("time"),
+    ULInt16("logarithmic_pressure"),
+    ULInt16("temperature"),
+    ULInt16("humidity"),
+    ULInt16("north_wind"),
+    ULInt16("east_wind"),
+    ULInt16("altitude"),
+    ULInt16("pressure"),
+    ULInt16("dew_point_temperature"),
+    ULInt16("mixing_ratio"),
+    ULInt16("wind_direction"),
+    ULInt16("wind_speed"),
+    ULInt16("azimuth"),
+    ULInt16("horizontal_distance"),
+    ULInt16("longitude"),
+    ULInt16("latitude"),
+    Bytes("significance_key", 2),
+    Bytes("recalculated_significance_key", 2),
+    ULInt16("radar_height")
+)
+
 pccora_file = Struct("pccora_file",
     pccora_header,
     pccora_identification,
     pccora_syspar,
-    GreedyRange(pccora_data)
+    Range(mincount=25, maxcout=25, subcon=pccora_data),
+    MetaArray(lambda ctx: ctx['pccora_header']['data_records'], hires_data)
 )
 
 class PCCORAParser(object):
@@ -209,4 +232,8 @@ class PCCORAParser(object):
 
     def get_data(self):
         """Return the PC-CORA file data array"""
+        return self.result.pccora_data
+
+    def get_hires_data(self):
+        """Return the PC-CORA file high resolution data array"""
         return self.result.pccora_data

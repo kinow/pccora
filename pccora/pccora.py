@@ -138,6 +138,10 @@ pccora_syspar = Struct("pccora_syspar",
     Bytes("syspar", 8087)
 )
 
+def _create_data_datetimes(launchtime, seconds):
+    datetimes = [launchtime+timedelta(seconds=int(x)) for x in range(0, math.ceil(seconds))]
+    return datetimes
+
 pccora_data = Struct("pccora_data",
     LFloat32("time"),
     SLInt16("logarithmic_pressure"),
@@ -188,8 +192,8 @@ pccora_data = Struct("pccora_data",
     Bytes("significance_key", 2),
     Bytes("recalculated_significance_key", 2),
     SLInt16("radar_height"),
-    Value('spress', lambda ctx: math.exp(ctx['logarithmic_pressure']/4096.0))
-    #Value("datetime", lambda ctx: ctx['datetime'] + timedelta(seconds=ctx['time_elapsed']))
+    Value('spress', lambda ctx: math.exp(ctx['logarithmic_pressure']/4096.0)),
+    Value("datetime", lambda ctx: _create_data_datetimes(ctx['_']['pccora_identification']['launch_time'], ctx['time']))
 )
 
 hires_data = Struct("hires_data",
@@ -287,3 +291,5 @@ class PCCORAParser(object):
     def get_hires_data(self):
         """Return the PC-CORA file high resolution data array"""
         return self.result.pccora_data
+
+

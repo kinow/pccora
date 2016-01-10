@@ -1,6 +1,7 @@
 from construct import *
 from datetime import datetime, timedelta
 import math
+import array
 
 #===============================================================================
 # Construct parser objects
@@ -28,12 +29,12 @@ pccora_identification = Struct("pccora_identification",
     SLInt16("wmo_block_number"),
     SLInt16("wmo_station_number"),
     ExprAdapter(SLInt16("station_latitude"),
-        encoder = lambda obj, ctx: obj / 0.01,
-        decoder = lambda obj, ctx: obj * 0.01
+        encoder = lambda obj, ctx: obj / 0.01 if obj != -32768 else obj,
+        decoder = lambda obj, ctx: obj * 0.01 if obj != -32768 else obj
     ),
     ExprAdapter(SLInt16("station_longitude"),
-        encoder = lambda obj, ctx: obj / 0.01,
-        decoder = lambda obj, ctx: obj * 0.01
+        encoder = lambda obj, ctx: obj / 0.01 if obj != -32768 else obj,
+        decoder = lambda obj, ctx: obj * 0.01 if obj != -32768 else obj
     ),
     SLInt16("station_altitude"),
     SLInt16("wind_speed_unit"),
@@ -58,8 +59,8 @@ pccora_identification = Struct("pccora_identification",
     String("weather_group", 6),
     String("napp", 6),
     ExprAdapter(SLInt16("surface_pressure"),
-        encoder = lambda obj, ctx: obj / 0.1,
-        decoder = lambda obj, ctx: obj * 0.1
+        encoder = lambda obj, ctx: obj / 0.1 if obj != -32768 else obj,
+        decoder = lambda obj, ctx: obj * 0.1 if obj != -32768 else obj
     ),
     SLInt16("surface_temperature"),
     SLInt16("surface_humidity"),
@@ -138,84 +139,122 @@ pccora_syspar = Struct("pccora_syspar",
     Bytes("syspar", 8087)
 )
 
-def _create_data_datetimes(launchtime, seconds):
-    datetimes = [launchtime+timedelta(seconds=int(x)) for x in range(0, math.ceil(seconds))]
-    return datetimes
-
 pccora_data = Struct("pccora_data",
     LFloat32("time"),
     SLInt16("logarithmic_pressure"),
     ExprAdapter(SLInt16("temperature"),
-        encoder = lambda obj, ctx: int(obj / 0.1),
-        decoder = lambda obj, ctx: float(obj) * 0.1
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
     ),
     SLInt16("humidity"),
     ExprAdapter(SLInt16("north_wind"),
-        encoder = lambda obj, ctx: int(obj / 0.1),
-        decoder = lambda obj, ctx: float(obj) * 0.1
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
     ),
     ExprAdapter(SLInt16("east_wind"),
-        encoder = lambda obj, ctx: int(obj / 0.1),
-        decoder = lambda obj, ctx: float(obj) * 0.1
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
     ),
     ExprAdapter(SLInt16("altitude"),
-        encoder = lambda obj, ctx: obj - 30000.0,
-        decoder = lambda obj, ctx: obj + 30000.0
+        encoder = lambda obj, ctx: obj - 30000.0 if obj != -32768 else obj,
+        decoder = lambda obj, ctx: obj + 30000.0 if obj != -32768 else obj
     ),
     ExprAdapter(SLInt16("pressure"),
-        encoder = lambda obj, ctx: int(obj / 0.1),
-        decoder = lambda obj, ctx: float(obj) * 0.1
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
     ),
     ExprAdapter(SLInt16("dew_point_temperature"),
-        encoder = lambda obj, ctx: int(obj / 0.1),
-        decoder = lambda obj, ctx: float(obj) * 0.1
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
     ),
     ExprAdapter(SLInt16("mixing_ratio"),
-        encoder = lambda obj, ctx: int(obj / 0.1),
-        decoder = lambda obj, ctx: float(obj) * 0.1
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
     ),
     SLInt16("wind_direction"),
     ExprAdapter(SLInt16("wind_speed"),
-        encoder = lambda obj, ctx: int(obj / 0.1),
-        decoder = lambda obj, ctx: 0
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: obj if obj == -32768 else int(obj * 0.01)
     ),
     SLInt16("azimuth"),
     SLInt16("horizontal_distance"),
     ExprAdapter(SLInt16("longitude"),
-        encoder = lambda obj, ctx: int(obj / 0.1),
-        decoder = lambda obj, ctx: float(obj) * 0.1
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
     ),
     ExprAdapter(SLInt16("latitude"),
-        encoder = lambda obj, ctx: int(obj / 0.1),
-        decoder = lambda obj, ctx: float(obj) * 0.1
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
     ),
-    Bytes("significance_key", 2),
-    Bytes("recalculated_significance_key", 2),
+    ExprAdapter(Bytes("significance_key", 2),
+        encoder = lambda obj, ctx: obj if obj == -32768 else bytes(obj),
+        decoder = lambda obj, ctx: [bin(obj[i]) for i in range(0, len(obj))] if obj != -32768 else obj
+    ),
+    ExprAdapter(Bytes("recalculated_significance_key", 2),
+        encoder = lambda obj, ctx: obj if obj == -32768 else bytes(obj),
+        decoder = lambda obj, ctx: [bin(obj[i]) for i in range(0, len(obj))] if obj != -32768 else obj
+    ),
     SLInt16("radar_height"),
-    Value('spress', lambda ctx: math.exp(ctx['logarithmic_pressure']/4096.0)),
-    Value("datetime", lambda ctx: _create_data_datetimes(ctx['_']['pccora_identification']['launch_time'], ctx['time']))
+    Value('spress', lambda ctx: math.exp(ctx['logarithmic_pressure']/4096.0))
 )
 
-hires_data = Struct("hires_data",
+pccora_hires_data = Struct("pccora_hires_data",
     LFloat32("time"),
     SLInt16("logarithmic_pressure"),
-    SLInt16("temperature"),
+    ExprAdapter(SLInt16("temperature"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
     SLInt16("humidity"),
-    SLInt16("north_wind"),
-    SLInt16("east_wind"),
-    SLInt16("altitude"),
-    SLInt16("pressure"),
-    SLInt16("dew_point_temperature"),
-    SLInt16("mixing_ratio"),
+    ExprAdapter(SLInt16("north_wind"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
+    ExprAdapter(SLInt16("east_wind"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
+    ExprAdapter(SLInt16("altitude"),
+        encoder = lambda obj, ctx: obj - 30000.0 if obj != -32768 else obj,
+        decoder = lambda obj, ctx: obj + 30000.0 if obj != -32768 else obj
+    ),
+    ExprAdapter(SLInt16("pressure"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
+    ExprAdapter(SLInt16("dew_point_temperature"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
+    ExprAdapter(SLInt16("mixing_ratio"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
     SLInt16("wind_direction"),
-    SLInt16("wind_speed"),
+    ExprAdapter(SLInt16("wind_speed"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: obj if obj == -32768 else int(obj * 0.01)
+    ),
     SLInt16("azimuth"),
     SLInt16("horizontal_distance"),
-    SLInt16("longitude"),
-    SLInt16("latitude"),
-    Bytes("significance_key", 2),
-    Bytes("recalculated_significance_key", 2),
-    SLInt16("radar_height")
+    ExprAdapter(SLInt16("longitude"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
+    ExprAdapter(SLInt16("latitude"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
+    ExprAdapter(Bytes("significance_key", 2),
+        encoder = lambda obj, ctx: obj if obj == -32768 else bytes(obj),
+        decoder = lambda obj, ctx: [bin(obj[i]) for i in range(0, len(obj))] if obj != -32768 else obj
+    ),
+    ExprAdapter(Bytes("recalculated_significance_key", 2),
+        encoder = lambda obj, ctx: obj if obj == -32768 else bytes(obj),
+        decoder = lambda obj, ctx: [bin(obj[i]) for i in range(0, len(obj))] if obj != -32768 else obj
+    ),
+    SLInt16("radar_height"),
+    Value('spress', lambda ctx: math.exp(ctx['logarithmic_pressure']/4096.0))
 )
 
 pccora_file = Struct("pccora_file",
@@ -223,7 +262,7 @@ pccora_file = Struct("pccora_file",
     pccora_identification,
     pccora_syspar,
     Range(mincount=25, maxcout=25, subcon=pccora_data),
-    MetaArray(lambda ctx: ctx['pccora_header']['data_records'], hires_data)
+    MetaArray(lambda ctx: ctx['pccora_header']['data_records'], pccora_hires_data)
 )
 
 class PCCORAParser(object):
@@ -290,6 +329,6 @@ class PCCORAParser(object):
 
     def get_hires_data(self):
         """Return the PC-CORA file high resolution data array"""
-        return self.result.pccora_data
+        return self.result.pccora_hires_data
 
 

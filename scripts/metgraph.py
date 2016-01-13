@@ -10,7 +10,7 @@ from pccora import *
 
 from jinja2 import Environment
 
-def print_template(file, head, ident):
+def print_template(file, head, ident, data, hires_data):
 	with(open(os.path.join(os.path.dirname(__file__), 'metgraph.j2'), 'r')) as template_file:
 		template = Environment().from_string(template_file.read())
 
@@ -46,6 +46,24 @@ def print_template(file, head, ident):
 			ident['humidity_correction']
 		)
 
+		entries = list()
+
+		minute = 0
+		hour = 0
+		for container in data:
+			entry = dict(
+				minute=minute,
+				hour=hour,
+				temperature=round(container['temperature'] - 273.15, 1),
+				dew_point_temperature=round(container['dew_point_temperature'] - 273.15, 1)
+			)
+			entries.append(entry)
+			minute += 2
+			if minute >= 60:
+				hour += 1
+				minute -= 60
+			break
+
 		s = template.render(
 			file_location=file,
 			started_at=started_at,
@@ -62,7 +80,9 @@ def print_template(file, head, ident):
 			clouds=ident['cloud_group'].decode().strip(),
 			special1=ident['weather_group'].decode().strip(),
 			special2=ident['napp'].decode().strip(),
-			success_of_signal=ident['success_of_signal']
+			success_of_signal=ident['success_of_signal'],
+			reason_temination=ident['reason_temination'],
+			entries=entries
 		)
 		print(s)
 
@@ -77,7 +97,7 @@ def main():
 	data = pccora_parser.get_data()
 	hires_data = pccora_parser.get_hires_data()
 
-	print_template(file, head, ident)
+	print_template(file, head, ident, data, hires_data)
 
 if __name__ == '__main__':
 	main()

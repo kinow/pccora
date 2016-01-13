@@ -26,8 +26,17 @@ Special 2 : {{special2}}
 Telemetry noise level  : {{ success_of_signal }} %
 
                  P      T      U
-Accepted (%) :  99.5  100.0   99.7
-Replaced (%) :   0.5    0.0    0.3
-Rejected (%) :   0.0    0.0    0.0
+Accepted (%) :  ???.? ???.?    ???.? (TODO: learn how this is calculated)
+Replaced (%) :  ???.? ???.?    ???.?
+Rejected (%) :  ???.? ???.?    ???.?
 
 
+Reason for termination : {{ reason_temination }} (TODO: 5=Increasing pressure)
+
+   Time Pressure   Height  Temperature  RH   Dewp   Significance flags
+
+ min  s      hPa      gpm     deg C      %  deg C  Automatic  Operator
+
+{% for entry in entries %}
+   {{ entry.minute }}  {{ entry.hour }}   1026.2        1      {{ entry.temperature }}     81    {{ entry.dew_point_temperature }} TU          TU            
+{% endfor %}

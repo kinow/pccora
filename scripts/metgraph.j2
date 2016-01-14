@@ -38,5 +38,4 @@ Reason for termination : {{ reason_temination }} (TODO: 5=Increasing pressure)
  min  s      hPa      gpm     deg C      %  deg C  Automatic  Operator
 
 {% for entry in entries %}
-   {{ entry.minute }}  {{ entry.hour }}   1026.2        1      {{ entry.temperature }}     81    {{ entry.dew_point_temperature }} TU          TU            
-{% endfor %}
+{{ entry }}{% endfor %}

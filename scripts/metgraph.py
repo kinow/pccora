@@ -8,9 +8,11 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'pccora'))
 from pccora import *
 
+from decimal import Decimal, ROUND_HALF_EVEN
+
 from jinja2 import Environment
 
-def print_template(file, head, ident, data, hires_data):
+def print_template(file, ident, hires_data):
 	with(open(os.path.join(os.path.dirname(__file__), 'metgraph.j2'), 'r')) as template_file:
 		template = Environment().from_string(template_file.read())
 
@@ -49,20 +51,37 @@ def print_template(file, head, ident, data, hires_data):
 		entries = list()
 
 		minute = 0
-		hour = 0
-		for container in data:
-			entry = dict(
-				minute=minute,
-				hour=hour,
-				temperature=round(container['temperature'] - 273.15, 1),
-				dew_point_temperature=round(container['dew_point_temperature'] - 273.15, 1)
+		second = 0
+		for container in hires_data:
+			time = container['time']
+
+			
+			minute=(int(time/60.0))
+			second=(int(time % 60))
+			pressure = round(float(container['spress']), 1)
+			gpm = container['altitude']
+			temperature = container['temperature'] - 273.15
+			temperature = round(temperature - (temperature % 0.1), 1)
+			rh = container['humidity']
+			dew_point_temperature = container['dew_point_temperature'] - 273.15
+			dew_point_temperature = round(dew_point_temperature - (dew_point_temperature % 0.1), 1)
+
+			significance = ''
+			recalculated_significance = ''
+			#recalculated_significance = '' if container['significance_key'] == container['recalculated_significance_key'] else '<>'
+
+			entry = "  %2d %2d %8s %8d %9s %6d %6s %13s %12s" % (
+				minute,
+				second,
+				pressure,
+				int(gpm),
+				str(temperature),
+				rh,
+				str(dew_point_temperature),
+				significance,
+				recalculated_significance
 			)
 			entries.append(entry)
-			minute += 2
-			if minute >= 60:
-				hour += 1
-				minute -= 60
-			break
 
 		s = template.render(
 			file_location=file,
@@ -97,7 +116,7 @@ def main():
 	data = pccora_parser.get_data()
 	hires_data = pccora_parser.get_hires_data()
 
-	print_template(file, head, ident, data, hires_data)
+	print_template(file, ident, hires_data)
 
 if __name__ == '__main__':
 	main()

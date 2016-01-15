@@ -8,7 +8,10 @@ import array
 #===============================================================================
 
 pccora_header = Struct("pccora_header",
-    String("copyright", 20),
+    ExprAdapter(String("copyright", 20),
+        encoder = lambda obj, ctx: obj.encode(),
+        decoder = lambda obj, ctx: obj.decode()
+    ),
     SLInt16("identification_length"),
     SLInt16("syspar_length"),
     SLInt16("data_records"),
@@ -58,9 +61,18 @@ pccora_identification = Struct("pccora_identification",
     SLInt16("message_month"),
     SLInt16("message_day"),
     SLInt16("message_hour"),
-    String("cloud_group", 6),
-    String("weather_group", 6),
-    String("napp", 6),
+    ExprAdapter(String("cloud_group", 6),
+        encoder = lambda obj, ctx: obj.encode(),
+        decoder = lambda obj, ctx: obj.decode()
+    ),
+    ExprAdapter(String("weather_group", 6),
+        encoder = lambda obj, ctx: obj.encode(),
+        decoder = lambda obj, ctx: obj.decode()
+    ),
+    ExprAdapter(String("napp", 6),
+        encoder = lambda obj, ctx: obj.encode(),
+        decoder = lambda obj, ctx: obj.decode()
+    ),
     ExprAdapter(SLInt16("surface_pressure"),
         encoder = lambda obj, ctx: obj / 0.1 if obj != -32768 else obj,
         decoder = lambda obj, ctx: obj * 0.1 if obj != -32768 else obj
@@ -72,8 +84,14 @@ pccora_identification = Struct("pccora_identification",
     SLInt16("surface_humidity"),
     SLInt16("surface_wind_direction"),
     SLInt16("surface_wind_speed"),
-    String("radiosonde_number", 10),
-    String("sounding_number", 10),
+    ExprAdapter(String("radiosonde_number", 10),
+        encoder = lambda obj, ctx: obj.encode(),
+        decoder = lambda obj, ctx: obj.decode()
+    ),
+    ExprAdapter(String("sounding_number", 10),
+        encoder = lambda obj, ctx: obj.encode(),
+        decoder = lambda obj, ctx: obj.decode()
+    ),
     ExprAdapter(SLInt16("pressure_correction"),
         encoder = lambda obj, ctx: obj / 0.1 if obj != -32768 else obj,
         decoder = lambda obj, ctx: obj * 0.1 if obj != -32768 else obj

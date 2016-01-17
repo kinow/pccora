@@ -27,7 +27,7 @@ Example
 Requirements
 ------------
 
-Python 2 or Python 3, and the `construct library <https://github.com/construct/construct>`.
+Python 2 or Python 3, and the `construct library https://github.com/construct/construct`.
 
 License
 -------

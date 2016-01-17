@@ -41,7 +41,7 @@ Python 2 or Python 3, and the `construct library https://github.com/construct/co
 Installation
 ------------
 
-`pip install pccora`
+    pip install pccora
 
 Or, to use the bleeding edge version, git clone this repository, and have a look at the scripts folders for an example how to use the module from within a local folder. You may have to uninstall the pip module first.
 

@@ -45,6 +45,8 @@ Installation
 
 Or, to use the bleeding edge version, git clone this repository, and have a look at the scripts folders for an example how to use the module from within a local folder. You may have to uninstall the pip module first.
 
+The PYPI URL is https://pypi.python.org/pypi/pccora.
+
 License
 -------
 

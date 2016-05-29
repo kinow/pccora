@@ -318,6 +318,7 @@ class PCCORAParser(object):
     * ``get_identification()``
     * ``get_syspar()``
     * ``get_data()``
+    * ``get_hires_data()``
 
     Or to get the whole result.
 

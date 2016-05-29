@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.0.2
+===
+
+* Fixed construct build process (0.0.1 was tested only with parse in mind)
+
 0.0.1
 ===
 

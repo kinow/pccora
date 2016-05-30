@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Requires: numpy, netCDF4
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'pccora'))

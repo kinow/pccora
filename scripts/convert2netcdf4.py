@@ -9,33 +9,6 @@ from construct import *
 from netCDF4 import Dataset
 import numpy as np
 
-b2 = np.dtype('int16')
-b4 = np.dtype('int32')
-st = np.dtype('str_')
-
-def get_type(subcon):
-	if Value == subcon.__class__:
-		return st
-	elif FormatField == subcon.__class__:
-		packer = subcon.packer
-		if packer.size == 2:
-			return b2
-		else:
-			return b4
-	else:
-		raise Exception("Unexpected subcon " + str(subcon))
-
-def get_variable(dataset, subcon, name):
-	variable_type = get_type(subcon)
-	v = dataset.createVariable(name, variable_type, ("height", ))
-	return v
-
-def hashify_subcons(subcons):
-	h = dict()
-	for format_field in subcons:
-		h[format_field.name] = format_field
-	return h
-
 def convert2netcdf4(data, options, file):
 	head = data['head']
 	ident = data['ident']
@@ -43,33 +16,168 @@ def convert2netcdf4(data, options, file):
 	#data_data = data['data']
 	hires_data = data['hires_data']
 
-	rootgrp = Dataset(file, "w", format="NETCDF4")
+	dataset = Dataset(file, "w", format="NETCDF4")
 
 	# Dimensions
-	rootgrp.createDimension("height")
-	# height_dimension.parameter = "height"
-	# height_dimension.units = "metre"
-	# height_dimension.missing_value = "-32768"
+	dataset.createDimension("height")
 
 	# Attributes
-	rootgrp.category = "Radiosonde"
-	rootgrp.instrument = "Vaisala"
+	dataset.category = "Radiosonde"
+	dataset.instrument = "Vaisala"
 	# TODO: or should we use launch_time?
-	d = hashify_subcons(pccora_identification.subcons)
-	v = get_variable(rootgrp, d['datetime'], "datetime")
-	print(v)
-	return
-	print(pccora_identification.build(ident))
-	rootgrp.start_datetime = ident['datetime']
+	dataset.start_datetime = str(ident['datetime'])
 
-	
+	azimuth_angle = []
+	dew_point = []
+	elevation_angle = []
+	height = []
+	latitude = []
+	longitude = []
+	mixing_ratio = []
+	pressure = []
+	_range = []
+	relative_humidity = []
+	temperature = []
+	time = []
+	east_wind = []
+	north_wind = []
+	wind_direction = []
+	wind_speed = []
 
 	# Variables
 	for container in hires_data:
-		print(container)
-		break
-	rootgrp.close()
+		azimuth_angle.append(container['azimuth'])
+		dew_point.append(container['dew_point_temperature'])
+		# FIXME: which one is elevation angle?
+		elevation_angle.append(container['mixing_ratio'])
+		height.append(container['radar_height'])
+		latitude.append(container['latitude'])
+		longitude.append(container['longitude'])
+		mixing_ratio.append(container['mixing_ratio'])
+		pressure.append(container['pressure'])
+		# FIXME: is that right? altitude for range?
+		_range.append(container['altitude'])
+		relative_humidity.append(container['humidity'])
+		temperature.append(container['temperature'])
+		time.append(container['time'])
+		east_wind.append(container['east_wind'])
+		north_wind.append(container['north_wind'])
+		wind_direction.append(container['wind_direction'])
+		wind_speed.append(container['wind_speed'])
 
+	# azimuth
+	azimuth_angle_variable = dataset.createVariable('azimuth_angle', 'f4', ("height", ))
+	azimuth_angle_variable.units = 'degree'
+	azimuth_angle_variable.missing_value = -32768
+	azimuth_angle_variable.parameter = 'azimuth_angle'
+	azimuth_angle_variable[:] = azimuth_angle
+
+	# dew_point
+	dew_point_variable = dataset.createVariable('dew_point', 'f4', ("height", ))
+	dew_point_variable.units = 'degC'
+	dew_point_variable.missing_value = -32768
+	dew_point_variable.parameter = 'dew_point_temperature'
+	dew_point_variable[:] = dew_point
+
+	# elevation_angle
+	elevation_angle_variable = dataset.createVariable('elevation_angle', 'f4', ("height", ))
+	elevation_angle_variable.units = 'degree'
+	elevation_angle_variable.missing_value = -32768
+	elevation_angle_variable.parameter = 'elevation_angle'
+	elevation_angle_variable[:] = elevation_angle
+
+	# height
+	height_variable = dataset.createVariable('height', 'f4', ("height", ))
+	height_variable.units = 'metre'
+	height_variable.missing_value = -32768
+	height_variable.parameter = 'height'
+	height_variable[:] = height
+
+	# latitude
+	latitude_variable = dataset.createVariable('latitude', 'f4', ("height", ))
+	latitude_variable.units = 'degree'
+	latitude_variable.missing_value = -32768
+	latitude_variable.parameter = 'latitude'
+	latitude_variable[:] = latitude
+
+	# longitude
+	longitude_variable = dataset.createVariable('longitude', 'f4', ("height", ))
+	longitude_variable.units = 'degree'
+	longitude_variable.missing_value = -32768
+	longitude_variable.parameter = 'longitude'
+	longitude_variable[:] = longitude
+
+	# mixing_ratio
+	mixing_ratio_variable = dataset.createVariable('mixing_ratio', 'f4', ("height", ))
+	mixing_ratio_variable.units = 'g/kg'
+	mixing_ratio_variable.missing_value = -32768
+	mixing_ratio_variable.parameter = 'humidity_mixing_ratio'
+	mixing_ratio_variable[:] = mixing_ratio
+
+	# pressure
+	pressure_variable = dataset.createVariable('pressure', 'f4', ("height", ))
+	pressure_variable.units = 'Pascal'
+	pressure_variable.missing_value = -32768
+	pressure_variable.parameter = 'air_pressure'
+	pressure_variable[:] = pressure
+
+	# range
+	range_variable = dataset.createVariable('range', 'f4', ("height", ))
+	range_variable.units = 'metre'
+	range_variable.missing_value = -32768
+	range_variable.parameter = 'range'
+	range_variable[:] = _range
+
+	# relative_humidity
+	relative_humidity_variable = dataset.createVariable('rel_humidity', 'f4', ("height", ))
+	relative_humidity_variable.units = 'percent'
+	relative_humidity_variable.missing_value = -32768
+	relative_humidity_variable.parameter = 'relative_humidity'
+	relative_humidity_variable[:] = relative_humidity
+
+	# temperature
+	temperature_variable = dataset.createVariable('temperature', 'f4', ("height", ))
+	temperature_variable.units = 'degC'
+	temperature_variable.missing_value = -32768
+	temperature_variable.parameter = 'air_temperature'
+	temperature_variable[:] = temperature
+
+	# time
+	time_variable = dataset.createVariable('time', 'f4', ("height", ))
+	time_variable.units = 'second'
+	time_variable.missing_value = -32768
+	time_variable.parameter = 'time'
+	time_variable[:] = time
+
+	# east_wind
+	east_wind_variable = dataset.createVariable('u_component', 'f4', ("height", ))
+	east_wind_variable.units = 'metre second**-1'
+	east_wind_variable.missing_value = -32768
+	east_wind_variable.parameter = 'eastward_wind'
+	east_wind_variable[:] = east_wind
+
+	# north_wind
+	north_wind_variable = dataset.createVariable('v_component', 'f4', ("height", ))
+	north_wind_variable.units = 'metre second**-1'
+	north_wind_variable.missing_value = -32768
+	north_wind_variable.parameter = 'northward_wind'
+	north_wind_variable[:] = north_wind
+
+	# wind_direction
+	wind_direction_variable = dataset.createVariable('wind_direction', 'f4', ("height", ))
+	wind_direction_variable.units = 'degree'
+	wind_direction_variable.missing_value = -32768
+	wind_direction_variable.parameter = 'wind_from_direction'
+	wind_direction_variable[:] = wind_direction
+
+	# wind_speed
+	wind_speed_variable = dataset.createVariable('wind_speed', 'f4', ("height", ))
+	wind_speed_variable.units = 'metre second**-1'
+	wind_speed_variable.missing_value = -32768
+	wind_speed_variable.parameter = 'wind_speed'
+	wind_speed_variable[:] = wind_speed
+
+	dataset.close()
 
 def main():
 	file = '/home/kinow/Downloads/96010109.EDT'

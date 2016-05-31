@@ -49,7 +49,7 @@ def convert2netcdf4(data, options, file):
 		azimuth_angle.append(container['azimuth'])
 		dew_point.append(container['dew_point_temperature'])
 		# FIXME: which one is elevation angle?
-		elevation_angle.append(container['mixing_ratio'])
+		elevation_angle.append(None)
 		height.append(container['radar_height'])
 		latitude.append(container['latitude'])
 		longitude.append(container['longitude'])

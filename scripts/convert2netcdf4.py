@@ -9,7 +9,13 @@ from construct import *
 from netCDF4 import Dataset
 import numpy as np
 
-def convert2netcdf4(data, options, file):
+def convert2netcdf4(data, file):
+	"""Convert a file in the Vaisala old binary format, into a netCDF file.
+
+	Keyword arguments:
+	data -- the data dictionary from a parsed radiosonde data file
+	file -- the dataset output file
+	"""
 	head = data['head']
 	ident = data['ident']
 
@@ -196,7 +202,6 @@ def main():
 	# Call function to print CSV
 	convert2netcdf4(
 		data=dict(head=head, ident=ident, data=data, hires_data=hires_data), 
-		options=dict(),
 		file=output)
 
 if __name__ == '__main__':

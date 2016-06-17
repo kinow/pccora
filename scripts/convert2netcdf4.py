@@ -9,6 +9,22 @@ from construct import *
 from netCDF4 import Dataset
 import numpy as np
 
+def parseandconvert(input, output):
+	pccora_parser = PCCORAParser()
+	pccora_parser.parse_file(input)
+
+	# Data
+	head = pccora_parser.get_header()
+	ident = pccora_parser.get_identification()
+	#syspar = pccora_parser.get_syspar()
+	data = pccora_parser.get_data()
+	hires_data = pccora_parser.get_hires_data()
+
+	# Call function to print CSV
+	convert2netcdf4(
+		data=dict(head=head, ident=ident, data=data, hires_data=hires_data), 
+		file=output)
+
 def convert2netcdf4(data, file):
 	"""Convert a file in the Vaisala old binary format, into a netCDF file.
 
@@ -189,20 +205,7 @@ def main():
 	file = '/home/kinow/Downloads/96010109.EDT'
 	output = '/home/kinow/Downloads/96010109-nohead-noident-hires.nc'
 
-	pccora_parser = PCCORAParser()
-	pccora_parser.parse_file(file)
-
-	# Data
-	head = pccora_parser.get_header()
-	ident = pccora_parser.get_identification()
-	#syspar = pccora_parser.get_syspar()
-	data = pccora_parser.get_data()
-	hires_data = pccora_parser.get_hires_data()
-
-	# Call function to print CSV
-	convert2netcdf4(
-		data=dict(head=head, ident=ident, data=data, hires_data=hires_data), 
-		file=output)
+	parseandconvert(file, output)
 
 if __name__ == '__main__':
 	main()

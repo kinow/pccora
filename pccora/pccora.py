@@ -10,7 +10,7 @@ import array
 pccora_header = Struct("pccora_header",
     ExprAdapter(String("copyright", 20),
         encoder = lambda obj, ctx: obj.encode(),
-        decoder = lambda obj, ctx: obj.decode()
+        decoder = lambda obj, ctx: obj.decode('utf-8', 'ignore')
     ),
     SLInt16("identification_length"),
     SLInt16("syspar_length"),
@@ -63,7 +63,7 @@ pccora_identification = Struct("pccora_identification",
     SLInt16("message_hour"),
     ExprAdapter(String("cloud_group", 6),
         encoder = lambda obj, ctx: obj.encode(),
-        decoder = lambda obj, ctx: obj.decode()
+        decoder = lambda obj, ctx: obj.decode('utf-8', 'ignore')
     ),
     ExprAdapter(String("weather_group", 6),
         encoder = lambda obj, ctx: obj.encode(),
@@ -90,7 +90,7 @@ pccora_identification = Struct("pccora_identification",
     ),
     ExprAdapter(String("sounding_number", 10),
         encoder = lambda obj, ctx: obj.encode(),
-        decoder = lambda obj, ctx: obj.decode()
+        decoder = lambda obj, ctx: obj.decode('utf-8', 'ignore')
     ),
     ExprAdapter(SLInt16("pressure_correction"),
         encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
@@ -167,8 +167,8 @@ pccora_identification = Struct("pccora_identification",
         decoder = lambda obj, ctx: obj * 0.1 if obj != -32768 else obj
     ),
     SLInt16("reference_humidity"),
-    Value("datetime", lambda ctx: datetime(ctx['year'], ctx['month'], ctx['day'], ctx['hour'], ctx['minute'])),
-    Value("launch_time", lambda ctx: ctx['datetime'] + timedelta(seconds=ctx['time_elapsed']))
+    Value("datetime", lambda ctx: None if ctx['year'] == 0 or ctx['month'] == 0 or ctx['day'] == 0 else datetime(ctx['year'], ctx['month'], ctx['day'], ctx['hour'], ctx['minute'])),
+    Value("launch_time", lambda ctx: None if ctx['datetime'] == None else ctx['datetime'] + timedelta(seconds=ctx['time_elapsed']))
 )
 
 pccora_syspar = Struct("pccora_syspar",

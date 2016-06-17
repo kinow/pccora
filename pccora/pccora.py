@@ -67,11 +67,11 @@ pccora_identification = Struct("pccora_identification",
     ),
     ExprAdapter(String("weather_group", 6),
         encoder = lambda obj, ctx: obj.encode(),
-        decoder = lambda obj, ctx: obj.decode()
+        decoder = lambda obj, ctx: obj.decode('utf-8', 'ignore')
     ),
     ExprAdapter(String("napp", 6),
         encoder = lambda obj, ctx: obj.encode(),
-        decoder = lambda obj, ctx: obj.decode()
+        decoder = lambda obj, ctx: obj.decode('utf-8', 'ignore')
     ),
     ExprAdapter(SLInt16("surface_pressure"),
         encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
@@ -86,7 +86,7 @@ pccora_identification = Struct("pccora_identification",
     SLInt16("surface_wind_speed"),
     ExprAdapter(String("radiosonde_number", 10),
         encoder = lambda obj, ctx: obj.encode(),
-        decoder = lambda obj, ctx: obj.decode()
+        decoder = lambda obj, ctx: obj.decode('utf-8', 'ignore')
     ),
     ExprAdapter(String("sounding_number", 10),
         encoder = lambda obj, ctx: obj.encode(),

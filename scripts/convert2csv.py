@@ -81,9 +81,9 @@ def main():
 	file = '/home/kinow/Downloads/96010109.EDT'
 	output = '/home/kinow/Downloads/96010109-nohead-noident-hires.CSV'
 
-	include_header = False
-	include_ident = False
-	include_data = False
+	include_header = True
+	include_ident = True
+	include_data = True
 	include_hires = True
 
 	pccora_parser = PCCORAParser()

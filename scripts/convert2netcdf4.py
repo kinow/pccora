@@ -74,7 +74,6 @@ def convert2netcdf4(data, file):
 		longitude.append(container['longitude'])
 		mixing_ratio.append(container['mixing_ratio'])
 		pressure.append(container['pressure'])
-		# FIXME: is that right? altitude for range?
 		altitude.append(container['altitude'])
 		relative_humidity.append(container['humidity'])
 		temperature.append(container['temperature'])

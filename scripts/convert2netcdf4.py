@@ -27,7 +27,8 @@ def parseandconvert(input, output):
 		file=output)
 
 def convert2netcdf4(data, file):
-	"""Convert a file in the Vaisala old binary format, into a netCDF file.
+	"""Convert a file in the Vaisala old binary format, into a netCDF file,
+	creating a file following the GRUAN data format standard.
 
 	Keyword arguments:
 	data -- the data dictionary from a parsed radiosonde data file

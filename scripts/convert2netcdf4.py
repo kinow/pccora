@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Requires: numpy, netCDF4
+# @see https://www.mi.uni-hamburg.de/en/arbeitsgruppen/strahlung-und-fernerkundung/intern/datadocs/gruan.html
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'pccora'))
@@ -158,7 +159,7 @@ def convert2netcdf4(data, file):
 	altitude_variable[:] = altitude
 
 	# relative_humidity
-	relative_humidity_variable = dataset.createVariable('rel_humidity', 'f4', ("time", ))
+	relative_humidity_variable = dataset.createVariable('rh', 'f4', ("time", ))
 	relative_humidity_variable.standard_name = 'relative_humidity'
 	relative_humidity_variable.units = '1'
 	relative_humidity_variable.long_name = 'Relative Humidity'
@@ -180,7 +181,7 @@ def convert2netcdf4(data, file):
 	# time
 	time_variable = dataset.createVariable('time', 'f4', ("time", ))
 	time_variable.standard_name = 'time'
-	time_variable.units = 'seconds since ?'
+	time_variable.units = 'seconds since launch'
 	time_variable.long_name = 'Time'
 	time_variable.g_format_type = 'FLT'
 	time_variable.g_format_nan = -32768

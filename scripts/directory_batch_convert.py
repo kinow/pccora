@@ -19,10 +19,16 @@ def main():
     from_dir = Path(args.fromdir)
     to_dir = Path(args.todir)
 
+    total_files = 0
+    total_success = 0
+    total_error = 0
+    faield_to_process = []
+
     for dirpath, dirnames, files in os.walk(from_dir.as_posix()):
         for name in files:
             #if name.lower().endswith(extension):
             if re.match(EXTENSION_REGEX, name.lower(), re.M|re.I):
+                total_files = total_files + 1
                 input_file = os.path.join(dirpath, name)
                 input_path = Path(input_file)
 
@@ -38,8 +44,21 @@ def main():
                 #print(output_file)
                 try:
                     parseandconvert(input_file, output_file)
+                    total_success = total_success + 1
                 except:
-                    print("### %s" % (output_file))
+                    total_error = total_error + 1
+                    faield_to_process.append(output_file)
+
+    print("### Stats ###")
+    print("")
+    print("- TOTAL   %d" % total_files)
+    print("- OK      %d" % total_success)
+    print("- NOK     %d" % total_error)
+    print("")
+    print("## LIST OF FILES WITH PARSING ERRORS ##")
+    print("")
+    for file in faield_to_process:
+        print("- %s" % file)
 
 
 if __name__ == '__main__':

@@ -35,8 +35,11 @@ def main():
                 if not output_path.parent.exists():
                     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-                print(output_file)
-                parseandconvert(input_file, output_file)
+                #print(output_file)
+                try:
+                    parseandconvert(input_file, output_file)
+                except:
+                    print("### %s" % (output_file))
 
 
 if __name__ == '__main__':

@@ -84,7 +84,7 @@ def main():
 	include_header = True
 	include_ident = True
 	include_data = True
-	include_hires = True
+	include_hires = False
 
 	pccora_parser = PCCORAParser()
 	pccora_parser.parse_file(file)

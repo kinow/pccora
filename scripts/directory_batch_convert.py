@@ -47,7 +47,9 @@ def main():
                     total_success = total_success + 1
                 except:
                     total_error = total_error + 1
-                    faield_to_process.append(output_file)
+                    failed_to_process.append(output_file)
+                    e = sys.exc_info()[0]
+                    print("%s" % e, file=sys.stderr)
 
     print("### Stats ###")
     print("")
@@ -57,7 +59,7 @@ def main():
     print("")
     print("## LIST OF FILES WITH PARSING ERRORS ##")
     print("")
-    for file in faield_to_process:
+    for file in failed_to_process:
         print("- %s" % file)
 
 

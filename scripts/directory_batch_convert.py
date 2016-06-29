@@ -13,6 +13,8 @@ parser.add_argument('--to', dest='todir', help='Output directory. Created if not
 
 EXTENSION_REGEX = r'.*\.edt$|.*\.[0-9]{2}e$'
 
+# python directory_batch_convert.py --from ~/Desktop/INVRCRGL/ --to ~/Desktop/output/ > ~/Desktop/pccora.log 2> ~/Desktop/errors.log
+
 def main():
     args = parser.parse_args()
 

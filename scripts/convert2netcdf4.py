@@ -45,11 +45,67 @@ def convert2netcdf4(data, file):
 	# Dimensions
 	dataset.createDimension("time")
 
+	dataset.title = "Vaisala Radiosonde"
+	dataset.source = str(ident['radiosonde_number'])
+
 	# Attributes
-	dataset.category = "Radiosonde"
-	dataset.instrument = "Vaisala"
-	# TODO: or should we use launch_time?
-	dataset.start_datetime = str(ident['datetime'])
+	# :Conventions = "CF-1.4";
+	# :history = "2015-02-16 01:56:31.000Z RS92-GDP: RS92 GRUAN Data Product with gruan_DP_calcRsDataProduct.pro (GRUAN IDL Library, 2012-08)";
+	# :references = "Currently no references";
+	# :comment = "RS92 GRUAN Data Product";
+	# :g.Product.ID = "151592";
+	# :g.Product.Code = "RS92-GDP";
+	# :g.Product.Name = "RS92 GRUAN Data Product";
+	# :g.Product.Version = "2";
+	# :g.Product.Level = "2";
+	# :g.Product.LevelDescription = "Data read from original data file";
+	# :g.Product.History = "2015-02-16 01:56:31.000Z RS92-GDP: RS92 GRUAN Data Product with gruan_DP_calcRsDataProduct.pro (GRUAN IDL Library, 2012-08)";
+	# :g.Product.References = "Currently no references";
+	# :g.Product.Producer = "GRUAN Lead Centre (Lindenberg, DWD, Germany)";
+	# :g.Product.OrgResolution = "1.0 s (time)";
+	# :g.Product.Status = "Data_approved";
+	# :g.Product.StatusDescription = "Data exist, read from chache, PTU + altitude columns available, all GC25 tests ok, all uncertainties as expected";
+	# :g.Product.ProcessingCode = "TRC, cc, HRC, TL, pGPS, or";
+	# :g.General.FileTypeVersion = "0.8";
+	# :g.General.Timestamp = "2015-02-16T01:56:34";
+	# :g.MeasuringSystem.ID = "LAU-RS-01";
+	dataset.setncattr('g.MeasuringSystem.Longitude', str(ident['station_longitude']))
+	dataset.setncattr('g.MeasuringSystem.Latitude', str(ident['station_latitude']))
+	dataset.setncattr('g.MeasuringSystem.Altitude', str(ident['station_altitude']))
+	dataset.setncattr('g.SurfaceObs.Pressure', str(ident['surface_pressure']))
+	dataset.setncattr('g.SurfaceObs.Temperature', str(ident['surface_temperature']))
+	dataset.setncattr('g.SurfaceObs.RelativeHumidity', str(ident['surface_humidity']))
+	# :g.Ascent.ID = "47392";
+	# :g.Ascent.StandardTime = "2015-01-06T22:05:00";
+	# :g.Ascent.StartTime = "2015-01-06T22:05:28";
+	# :g.Ascent.BalloonNumber = "1";
+	# :g.Ascent.BalloonType = "TA1000";
+	# :g.Ascent.UnwinderType = "DW-52";
+	# :g.Ascent.FillingWeight = "1900.0 g";
+	# :g.Ascent.Payload = "160.0 g";
+	# :g.Ascent.GrossWeight = "1160.0 g";
+	# :g.Ascent.IncludeDescent = "no";
+	# :g.Ascent.BurstpointAltitude = "31479.9 m";
+	# :g.Ascent.BurstpointPressure = "9.71 hPa";
+	# :g.Ascent.PrecipitableWaterColumn = "11.6 kg m-2";
+	# :g.Ascent.PrecipitableWaterColumnU = "0.5 kg m-2";
+	# :g.Ascent.TropopauseHeight = "11421.4 m";
+	# :g.Ascent.TropopauseTemperature = "210.0 K";
+	# :g.Ascent.TropopausePressure = "215.3 hPa";
+	# :g.Ascent.TropopausePotTemperature = "325.6 K";
+	dataset.setncattr('g.Instrument.SerialNumber', str(ident['spu_serial_number']))
+	dataset.setncattr('g.Instrument.Type', str(ident['sounding_type']))
+	# :g.Instrument.TypeFamily = "RS92";
+	dataset.setncattr('g.Instrument.Manufacturer', 'Vaisala')
+	# :g.Instrument.Weight = "160.0 g";
+	# :g.Instrument.TelemetrySonde = "RS92";
+	# :g.Instrument.SoftwareVersion = "3.64.1";
+	# :g.Instrument.Comment = "VP_formula: HylandWexler,";
+	dataset.institution = "NIWA - National Institute of Water & Atmospheric Research"
+	dataset.setncattr('g.General.SiteCode', "LAU")
+	dataset.setncattr('g.General.SiteName', "Lauder")
+	dataset.setncattr('g.General.SiteInstitution', "NIWA - National Institute of Water & Atmospheric Research")
+	dataset.setncattr('g.General.Timestamp', str(ident['datetime']))
 
 	azimuth_angle = []
 	dew_point = []

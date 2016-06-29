@@ -141,35 +141,8 @@ def convert2netcdf4(data, file):
 		wind_direction.append(container['wind_direction'])
 		wind_speed.append(container['wind_speed'])
 
-	# azimuth
-	azimuth_angle_variable = dataset.createVariable('azimuth', 'f4', ("time", ))
-	azimuth_angle_variable.standard_name = 'azimuth_angle'
-	azimuth_angle_variable.units = 'degree'
-	azimuth_angle_variable.long_name = 'Azimuth Angle'
-	azimuth_angle_variable.g_format_type = 'FLT'
-	azimuth_angle_variable.g_format_nan = -32768
-	azimuth_angle_variable[:] = azimuth_angle
-
-	# dew_point
-	dew_point_variable = dataset.createVariable('FP', 'f4', ("time", ))
-	dew_point_variable.units = 'K'
-	dew_point_variable.long_name = 'Frostpoint'
-	dew_point_variable.g_format_type = 'FLT'
-	dew_point_variable.g_format_nan = -32768
-	dew_point_variable.coordinates = "lon lat alt"
-	dew_point_variable[:] = dew_point
-
-	# height
-	height_variable = dataset.createVariable('height', 'f4', ("time", ))
-	height_variable.standard_name = 'radar_height'
-	height_variable.units = 'm'
-	height_variable.long_name = 'Radar height'
-	height_variable.g_format_type = 'FLT'
-	height_variable.g_format_nan = -32768
-	height_variable[:] = height
-
 	# latitude
-	latitude_variable = dataset.createVariable('lat', 'f4', ("time", ))
+	latitude_variable = dataset.createVariable('lat', 'f4', ("time", ), zlib=True)
 	latitude_variable.standard_name = 'latitude'
 	latitude_variable.units = 'degree_north'
 	latitude_variable.long_name = 'Latitude'
@@ -178,7 +151,7 @@ def convert2netcdf4(data, file):
 	latitude_variable[:] = latitude
 
 	# longitude
-	longitude_variable = dataset.createVariable('lon', 'f4', ("time", ))
+	longitude_variable = dataset.createVariable('lon', 'f4', ("time", ), zlib=True)
 	longitude_variable.standard_name = 'longitude'
 	longitude_variable.units = 'degree_east'
 	longitude_variable.long_name = 'Longitude'
@@ -186,27 +159,8 @@ def convert2netcdf4(data, file):
 	longitude_variable.g_format_nan = -32768
 	longitude_variable[:] = longitude
 
-	# mixing_ratio
-	mixing_ratio_variable = dataset.createVariable('WVMR', 'f4', ("time", ))
-	mixing_ratio_variable.standard_name = 'Water_vapor_mixing_ratio'
-	mixing_ratio_variable.units = '1'
-	mixing_ratio_variable.long_name = 'Water Vapor Volume Mixing Ratio'
-	mixing_ratio_variable.g_format_type = 'FLT'
-	mixing_ratio_variable.g_format_nan = -32768
-	mixing_ratio_variable[:] = mixing_ratio
-
-	# pressure
-	pressure_variable = dataset.createVariable('press', 'f4', ("time", ))
-	pressure_variable.standard_name = 'air_pressure'
-	pressure_variable.units = 'hPa'
-	pressure_variable.long_name = 'Pressure'
-	pressure_variable.g_format_type = 'FLT'
-	pressure_variable.g_format_nan = -32768
-	pressure_variable.coordinates = "lon lat alt"
-	pressure_variable[:] = pressure
-
 	# altitude
-	altitude_variable = dataset.createVariable('alt', 'f4', ("time", ))
+	altitude_variable = dataset.createVariable('alt', 'f4', ("time", ), zlib=True)
 	altitude_variable.standard_name = 'altitude'
 	altitude_variable.units = 'm'
 	altitude_variable.long_name = 'Altitude'
@@ -215,8 +169,54 @@ def convert2netcdf4(data, file):
 	altitude_variable.positive = "up"
 	altitude_variable[:] = altitude
 
+	# azimuth
+	azimuth_angle_variable = dataset.createVariable('azimuth', 'f4', ("time", ), zlib=True)
+	azimuth_angle_variable.standard_name = 'azimuth_angle'
+	azimuth_angle_variable.units = 'degree'
+	azimuth_angle_variable.long_name = 'Azimuth Angle'
+	azimuth_angle_variable.g_format_type = 'FLT'
+	azimuth_angle_variable.g_format_nan = -32768
+	azimuth_angle_variable[:] = azimuth_angle
+
+	# dew_point
+	dew_point_variable = dataset.createVariable('FP', 'f4', ("time", ), zlib=True)
+	dew_point_variable.units = 'K'
+	dew_point_variable.long_name = 'Frostpoint'
+	dew_point_variable.g_format_type = 'FLT'
+	dew_point_variable.g_format_nan = -32768
+	dew_point_variable.coordinates = "lon lat alt"
+	dew_point_variable[:] = dew_point
+
+	# height
+	height_variable = dataset.createVariable('height', 'f4', ("time", ), zlib=True)
+	height_variable.standard_name = 'radar_height'
+	height_variable.units = 'm'
+	height_variable.long_name = 'Radar height'
+	height_variable.g_format_type = 'FLT'
+	height_variable.g_format_nan = -32768
+	height_variable[:] = height
+
+	# mixing_ratio
+	mixing_ratio_variable = dataset.createVariable('WVMR', 'f4', ("time", ), zlib=True)
+	mixing_ratio_variable.standard_name = 'Water_vapor_mixing_ratio'
+	mixing_ratio_variable.units = '1'
+	mixing_ratio_variable.long_name = 'Water Vapor Volume Mixing Ratio'
+	mixing_ratio_variable.g_format_type = 'FLT'
+	mixing_ratio_variable.g_format_nan = -32768
+	mixing_ratio_variable[:] = mixing_ratio
+
+	# pressure
+	pressure_variable = dataset.createVariable('press', 'f4', ("time", ), zlib=True)
+	pressure_variable.standard_name = 'air_pressure'
+	pressure_variable.units = 'hPa'
+	pressure_variable.long_name = 'Pressure'
+	pressure_variable.g_format_type = 'FLT'
+	pressure_variable.g_format_nan = -32768
+	pressure_variable.coordinates = "lon lat alt"
+	pressure_variable[:] = pressure
+
 	# relative_humidity
-	relative_humidity_variable = dataset.createVariable('rh', 'f4', ("time", ))
+	relative_humidity_variable = dataset.createVariable('rh', 'f4', ("time", ), zlib=True)
 	relative_humidity_variable.standard_name = 'relative_humidity'
 	relative_humidity_variable.units = '1'
 	relative_humidity_variable.long_name = 'Relative Humidity'
@@ -226,7 +226,7 @@ def convert2netcdf4(data, file):
 	relative_humidity_variable[:] = relative_humidity
 
 	# temperature
-	temperature_variable = dataset.createVariable('temp', 'f4', ("time", ))
+	temperature_variable = dataset.createVariable('temp', 'f4', ("time", ), zlib=True)
 	temperature_variable.standard_name = 'air_temperature'
 	temperature_variable.units = 'K'
 	temperature_variable.long_name = 'Temperature'
@@ -236,7 +236,7 @@ def convert2netcdf4(data, file):
 	temperature_variable[:] = temperature
 
 	# time
-	time_variable = dataset.createVariable('time', 'f4', ("time", ))
+	time_variable = dataset.createVariable('time', 'f4', ("time", ), zlib=True)
 	time_variable.standard_name = 'time'
 	time_variable.units = 'seconds since launch'
 	time_variable.long_name = 'Time'
@@ -247,7 +247,7 @@ def convert2netcdf4(data, file):
 	time_variable[:] = time
 
 	# east_wind
-	east_wind_variable = dataset.createVariable('u', 'f4', ("time", ))
+	east_wind_variable = dataset.createVariable('u', 'f4', ("time", ), zlib=True)
 	east_wind_variable.standard_name = 'eastward_wind'
 	east_wind_variable.units = 'm s-1'
 	east_wind_variable.long_name = 'Zonal Wind'
@@ -258,7 +258,7 @@ def convert2netcdf4(data, file):
 	east_wind_variable[:] = east_wind
 
 	# north_wind
-	north_wind_variable = dataset.createVariable('v', 'f4', ("time", ))
+	north_wind_variable = dataset.createVariable('v', 'f4', ("time", ), zlib=True)
 	north_wind_variable.standard_name = 'northward_wind'
 	north_wind_variable.units = 'm s-1'
 	north_wind_variable.long_name = 'Meridional Wind'
@@ -269,7 +269,7 @@ def convert2netcdf4(data, file):
 	north_wind_variable[:] = north_wind
 
 	# wind_direction
-	wind_direction_variable = dataset.createVariable('wdir', 'f4', ("time", ))
+	wind_direction_variable = dataset.createVariable('wdir', 'f4', ("time", ), zlib=True)
 	wind_direction_variable.standard_name = 'wind_from_direction'
 	wind_direction_variable.units = 'degree'
 	wind_direction_variable.long_name = 'Wind Direction'
@@ -280,7 +280,7 @@ def convert2netcdf4(data, file):
 	wind_direction_variable[:] = wind_direction
 
 	# wind_speed
-	wind_speed_variable = dataset.createVariable('wspeed', 'f4', ("time", ))
+	wind_speed_variable = dataset.createVariable('wspeed', 'f4', ("time", ), zlib=True)
 	wind_speed_variable.standard_name = 'wind_speed'
 	wind_speed_variable.units = 'm s-1'
 	wind_speed_variable.long_name = 'Wind Speed'

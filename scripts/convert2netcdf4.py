@@ -178,7 +178,7 @@ def convert2netcdf4(data, file):
 	latitude_variable[:] = latitude
 
 	# longitude
-	longitude_variable = dataset.createVariable('long', 'f4', ("time", ))
+	longitude_variable = dataset.createVariable('lon', 'f4', ("time", ))
 	longitude_variable.standard_name = 'longitude'
 	longitude_variable.units = 'degree_east'
 	longitude_variable.long_name = 'Longitude'

@@ -3,6 +3,7 @@ import sys
 import re
 from pathlib import Path
 
+import logging
 import argparse
 
 from convert2netcdf4 import parseandconvert
@@ -13,9 +14,24 @@ parser.add_argument('--to', dest='todir', help='Output directory. Created if not
 
 EXTENSION_REGEX = r'.*\.edt$|.*\.[0-9]{2}e$'
 
+FORMAT = '%(asctime)s %(message)s'
+logger = logging.getLogger()
+handler = logging.StreamHandler()
+formatter = logging.Formatter(FORMAT)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
+
 # python directory_batch_convert.py --from ~/Desktop/INVRCRGL/ --to ~/Desktop/output/ > ~/Desktop/pccora.log 2> ~/Desktop/errors.log
 
 def main():
+    try:
+        process()
+    except KeyboardInterrupt:
+        logging.info("User canceled execution! Bye")
+        sys.exit(1)
+
+def process():
     args = parser.parse_args()
 
     from_dir = Path(args.fromdir)
@@ -43,26 +59,39 @@ def main():
                 if not output_path.parent.exists():
                     output_path.parent.mkdir(parents=True, exist_ok=True)
 
+                if output_path.exists():
+                    logger.warning("Skipping existing file [%s]" % output_file)
+                    continue
+
+                statinfo = os.stat(input_file)
+                if statinfo.st_size == 0:
+                    logger.warning("Skipping zero byte file [%s]" % output_file)
+                    continue
+
                 #print(output_file)
                 try:
                     parseandconvert(input_file, output_file)
                     total_success = total_success + 1
+                    logger.info("Successfully parsed [%s]" % output_file)
+                except KeyboardInterrupt:
+                    raise
                 except:
                     total_error = total_error + 1
                     failed_to_process.append(output_file)
                     e = sys.exc_info()[0]
-                    print("%s" % e, file=sys.stderr)
+                    logger.error("Error parsing [%s]: %s" % (output_file, e))
 
-    print("### Stats ###")
-    print("")
-    print("- TOTAL   %d" % total_files)
-    print("- OK      %d" % total_success)
-    print("- NOK     %d" % total_error)
-    print("")
-    print("## LIST OF FILES WITH PARSING ERRORS ##")
-    print("")
-    for file in failed_to_process:
-        print("- %s" % file)
+    logger.info("### Stats ###")
+    logger.info("- TOTAL   %d" % total_files)
+    logger.info("- OK      %d" % total_success)
+    logger.info("- NOK     %d" % total_error)
+    logger.info("")
+    if len(failed_to_process) > 0:
+        logger.warning("## LIST OF FILES WITH PARSING ERRORS ##")
+        for file in failed_to_process:
+            logger.warning("- %s" % file)
+    else:
+        logger.info("All files parsed successfully!")
 
 
 if __name__ == '__main__':

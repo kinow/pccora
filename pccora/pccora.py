@@ -298,7 +298,7 @@ pccora_file = Struct("pccora_file",
     pccora_identification,
     pccora_syspar,
     Range(mincount=25, maxcout=25, subcon=pccora_data),
-    MetaArray(lambda ctx: ctx['pccora_header']['data_records'], pccora_hires_data)
+    OptionalGreedyRange(pccora_hires_data)
 )
 
 class PCCORAParser(object):

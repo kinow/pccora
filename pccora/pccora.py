@@ -297,7 +297,7 @@ pccora_file = Struct("pccora_file",
     pccora_header,
     pccora_identification,
     pccora_syspar,
-    Range(mincount=25, maxcout=25, subcon=pccora_data),
+    Range(mincount=1, maxcout=25, subcon=pccora_data),
     OptionalGreedyRange(pccora_hires_data)
 )
 

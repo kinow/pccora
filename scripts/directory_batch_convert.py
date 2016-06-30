@@ -20,7 +20,7 @@ handler = logging.StreamHandler()
 formatter = logging.Formatter(FORMAT)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 # python directory_batch_convert.py --from ~/Desktop/INVRCRGL/ --to ~/Desktop/output/ > ~/Desktop/pccora.log 2> ~/Desktop/errors.log
 
@@ -59,13 +59,13 @@ def process():
                 if not output_path.parent.exists():
                     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-                if output_path.exists():
-                    logger.warning("Skipping existing file [%s]" % output_file)
+                if os.path.isfile(output_file):
+                    logger.debug("Skipping existing file [%s]" % output_file)
                     continue
 
                 statinfo = os.stat(input_file)
                 if statinfo.st_size == 0:
-                    logger.warning("Skipping zero byte file [%s]" % output_file)
+                    logger.warning("Skipping zero byte file [%s]" % input_file)
                     continue
 
                 #print(output_file)
@@ -75,11 +75,10 @@ def process():
                     logger.info("Successfully parsed [%s]" % output_file)
                 except KeyboardInterrupt:
                     raise
-                except:
+                except Exception as e:
                     total_error = total_error + 1
                     failed_to_process.append(output_file)
-                    e = sys.exc_info()[0]
-                    logger.error("Error parsing [%s]: %s" % (output_file, e))
+                    logger.error("Error parsing [%s]: %s" % (input_file, e))
 
     logger.info("### Stats ###")
     logger.info("- TOTAL   %d" % total_files)

@@ -41,6 +41,7 @@ def process():
     total_success = 0
     total_error = 0
     failed_to_process = []
+    skipped_files = []
 
     for dirpath, dirnames, files in os.walk(from_dir.as_posix()):
         for name in files:
@@ -60,12 +61,14 @@ def process():
                     output_path.parent.mkdir(parents=True, exist_ok=True)
 
                 if os.path.isfile(output_file):
+                    total_success = total_success + 1
                     logger.debug("Skipping existing file [%s]" % output_file)
                     continue
 
                 statinfo = os.stat(input_file)
                 if statinfo.st_size == 0:
-                    logger.warning("Skipping zero byte file [%s]" % input_file)
+                    skipped_files.append(input_file)
+                    logger.debug("Skipping zero byte file [%s]" % input_file)
                     continue
 
                 #print(output_file)
@@ -76,20 +79,26 @@ def process():
                 except KeyboardInterrupt:
                     raise
                 except Exception as e:
-                    total_error = total_error + 1
-                    failed_to_process.append(output_file)
+                    failed_to_process.append(input_file)
                     logger.error("Error parsing [%s]: %s" % (input_file, e))
 
     logger.info("### Stats ###")
     logger.info("- TOTAL   %d" % total_files)
     logger.info("- OK      %d" % total_success)
-    logger.info("- NOK     %d" % total_error)
-    logger.info("")
+    logger.info("- NOK     %d" % len(failed_to_process))
+    logger.info("- SKIPPED %d" % len(skipped_files))
+    
     if len(failed_to_process) > 0:
         logger.warning("## LIST OF FILES WITH PARSING ERRORS ##")
         for file in failed_to_process:
             logger.warning("- %s" % file)
-    else:
+
+    if len(skipped_files) > 0:
+        logger.warning("## LIST OF FILES WITH 0 BYTES THAT WERE SKIPPED ##")
+        for file in skipped_files:
+            logger.warning("- %s" % file)
+
+    if len(failed_to_process) == 0 and len(skipped_files) == 0:
         logger.info("All files parsed successfully!")
 
 

@@ -66,7 +66,7 @@ def convert2netcdf4(data, file):
 	dataset.telecommunications_headings = str(ident['telecommunications_headings']) + ', comment: 0 = No 1 = Yes'
 	dataset.res = str(ident['reserved'])
 	dataset.sounding_type = str(ident['sounding_type']) + ', comment: 0 = PTU 1 = Only pressure 2 = No PTU (Radar)'
-	dataset.start_mode = str(ident['start_mode']) + ', comment: 0 = Auto 1 =Manual'
+	dataset.start_mode = str(ident['start_mode']) + ', comment: 0 = Auto 1 = Manual'
 	dataset.time_elapsed = str(ident['time_elapsed'])
 	dataset.ptu_rate = str(ident['ptu_rate'])
 	dataset.spu_serial_number = str(ident['spu_serial_number'])

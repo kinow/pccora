@@ -24,7 +24,7 @@ def main():
     total_files = 0
     total_success = 0
     total_error = 0
-    faield_to_process = []
+    failed_to_process = []
 
     for dirpath, dirnames, files in os.walk(from_dir.as_posix()):
         for name in files:

@@ -78,6 +78,7 @@ def main():
                             dates[d][hpa]['std_wdir'] = -32768
                             dates[d][hpa]['std_wspeed'] = -32768
 
+                    # TODO: it is not hPa, is it?
                     hpa = sig_levels_col[0]
                     if is_int(hpa):
                         if not hpa in dates[d]:

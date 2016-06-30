@@ -50,7 +50,7 @@ pccora_identification = Struct("pccora_identification",
     SLInt32("spu_serial_number"),
     ExprAdapter(SLInt16("year"),
         encoder = lambda obj, ctx: (divmod(obj, 100)[1]) if obj != -32768 else obj,
-        decoder = lambda obj, ctx: (1900 + obj if obj >= 20 else 2000 + obj) if obj != -32768 else obj
+        decoder = lambda obj, ctx: (1900 + obj if obj >= 20 else 2000 + obj) if obj != -32768 and obj < 1000 else obj
     ),
     SLInt16("month"),
     SLInt16("day"),

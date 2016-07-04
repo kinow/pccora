@@ -21,18 +21,19 @@ PILOT_PATTERN = re.compile(PILOT_REGEX, flags=re.IGNORECASE)
 
 # http://stackoverflow.com/questions/1265665/python-check-if-a-string-represents-an-int-without-using-try-except
 def is_int(s):
+    """Check if a given value can be parsed as Int""" 
     try: 
         int(s)
         return True
     except ValueError:
         return False
 
-def main():
-    wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService_simple.txt'
-    txt_file = '/home/kinow/Downloads/94032510.txt'
-
+def parse_wind_file(wind_file):
+    """
+    Parse a file containing readings with historical wind speed and wind direction. A poor
+    man's simple state machine, with just two states.
+    """
     dates = dict()
-
     with open(wind_file, 'r') as wf:
         
         in_pilot = False
@@ -93,6 +94,12 @@ def main():
 
                 elif line.strip().startswith('Message Numbers'):
                     in_pilot = False
+
+def main():
+    wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService_simple.txt'
+    txt_file = '/home/kinow/Downloads/94032510.txt'
+
+    dates = parse_wind_file(wind_file)
 
     pprint(dates)
 

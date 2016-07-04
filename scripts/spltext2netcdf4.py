@@ -29,7 +29,7 @@ def is_int(s):
 
 def main():
     wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService_simple.txt'
-    txt_file = '/home/kinow/Desktop/INVRCRGL/1994/9403/94032510.txt'
+    txt_file = '/home/kinow/Downloads/94032510.txt'
 
     dates = dict()
 
@@ -54,7 +54,8 @@ def main():
                 dates[d] = {
                     'station_id': station_id,
                     'site_name': site_name,
-                    'date': date
+                    'date': date,
+                    'readings': dict()
                 }
 
                 in_pilot = True
@@ -69,26 +70,26 @@ def main():
 
                     hpa = std_levels_col[0]
                     if is_int(hpa):
-                        if not hpa in dates[d]:
-                            dates[d][hpa] = dict()
+                        if not hpa in dates[d]['readings']:
+                            dates[d]['readings'][hpa] = dict()
                         if len(std_levels_col) == 3:
-                            dates[d][hpa]['std_wdir'] = std_levels_col[1]
-                            dates[d][hpa]['std_wspeed'] = std_levels_col[2]
+                            dates[d]['readings'][hpa]['std_wdir'] = std_levels_col[1]
+                            dates[d]['readings'][hpa]['std_wspeed'] = std_levels_col[2]
                         else:
-                            dates[d][hpa]['std_wdir'] = -32768
-                            dates[d][hpa]['std_wspeed'] = -32768
+                            dates[d]['readings'][hpa]['std_wdir'] = -32768
+                            dates[d]['readings'][hpa]['std_wspeed'] = -32768
 
                     # TODO: it is not hPa, is it?
                     hpa = sig_levels_col[0]
                     if is_int(hpa):
-                        if not hpa in dates[d]:
-                            dates[d][hpa] = dict()
+                        if not hpa in dates[d]['readings']:
+                            dates[d]['readings'][hpa] = dict()
                         if len(sig_levels_col) == 3:
-                            dates[d][hpa]['sig_wdir'] = sig_levels_col[1]
-                            dates[d][hpa]['sig_wspeed'] = sig_levels_col[2]
+                            dates[d]['readings'][hpa]['sig_wdir'] = sig_levels_col[1]
+                            dates[d]['readings'][hpa]['sig_wspeed'] = sig_levels_col[2]
                         else:
-                            dates[d][hpa]['sig_wdir'] = -32768
-                            dates[d][hpa]['sig_wspeed'] = -32768
+                            dates[d]['readings'][hpa]['sig_wdir'] = -32768
+                            dates[d]['readings'][hpa]['sig_wspeed'] = -32768
 
                 elif line.strip().startswith('Message Numbers'):
                     in_pilot = False

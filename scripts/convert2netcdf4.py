@@ -177,7 +177,7 @@ def convert2netcdf4(data, file):
 	elapsed_time_variable.units = 's'
 	elapsed_time_variable.long_name = 'Elapsed time since sonde release'
 	elapsed_time_variable.g_format_type = 'FLT'
-	elapsed_time_variable.g_format_nan = -32768
+	elapsed_time_variable.FillValue = -32768
 	elapsed_time_variable[:] = elapsed_time
 
 	# logarithmic_pressure
@@ -186,7 +186,7 @@ def convert2netcdf4(data, file):
 	logarithmic_pressure_variable.units = '4096*ln(P)hPa'
 	logarithmic_pressure_variable.long_name = 'Scaled logarithmic pressure'
 	logarithmic_pressure_variable.g_format_type = 'FLT'
-	logarithmic_pressure_variable.g_format_nan = -32768
+	logarithmic_pressure_variable.FillValue = -32768
 	logarithmic_pressure_variable[:] = logarithmic_pressure
 
 	# temperature
@@ -195,7 +195,7 @@ def convert2netcdf4(data, file):
 	temperature_variable.units = 'K'
 	temperature_variable.long_name = 'Temperature'
 	temperature_variable.g_format_type = 'FLT'
-	temperature_variable.g_format_nan = -32768
+	temperature_variable.FillValue = -32768
 	temperature_variable.coordinates = "lon lat alt"
 	temperature_variable[:] = temperature
 
@@ -205,7 +205,7 @@ def convert2netcdf4(data, file):
 	relative_humidity_variable.units = '1'
 	relative_humidity_variable.long_name = 'Relative Humidity'
 	relative_humidity_variable.g_format_type = 'FLT'
-	relative_humidity_variable.g_format_nan = -32768
+	relative_humidity_variable.FillValue = -32768
 	relative_humidity_variable.coordinates = "lon lat alt"
 	relative_humidity_variable[:] = relative_humidity
 
@@ -215,7 +215,7 @@ def convert2netcdf4(data, file):
 	north_wind_variable.units = 'm s-1'
 	north_wind_variable.long_name = 'Meridional Wind'
 	north_wind_variable.g_format_type = 'FLT'
-	north_wind_variable.g_format_nan = -32768
+	north_wind_variable.FillValue = -32768
 	north_wind_variable.comment = "Wind towards the north"
 	north_wind_variable.coordinates = "lon lat alt"
 	north_wind_variable[:] = north_wind
@@ -226,7 +226,7 @@ def convert2netcdf4(data, file):
 	east_wind_variable.units = 'm s-1'
 	east_wind_variable.long_name = 'Zonal Wind'
 	east_wind_variable.g_format_type = 'FLT'
-	east_wind_variable.g_format_nan = -32768
+	east_wind_variable.FillValue = -32768
 	east_wind_variable.comment = "Wind towards the east"
 	east_wind_variable.coordinates = "lon lat alt"
 	east_wind_variable[:] = east_wind
@@ -237,7 +237,7 @@ def convert2netcdf4(data, file):
 	altitude_variable.units = 'm'
 	altitude_variable.long_name = 'Altitude'
 	altitude_variable.g_format_type = 'FLT'
-	altitude_variable.g_format_nan = -32768
+	altitude_variable.FillValue = -32768
 	altitude_variable.positive = "up"
 	altitude_variable[:] = altitude
 
@@ -247,7 +247,7 @@ def convert2netcdf4(data, file):
 	pressure_variable.units = 'hPa'
 	pressure_variable.long_name = 'Pressure'
 	pressure_variable.g_format_type = 'FLT'
-	pressure_variable.g_format_nan = -32768
+	pressure_variable.FillValue = -32768
 	pressure_variable.coordinates = "lon lat alt"
 	pressure_variable[:] = pressure
 
@@ -256,17 +256,17 @@ def convert2netcdf4(data, file):
 	dew_point_variable.units = 'K'
 	dew_point_variable.long_name = 'Frostpoint'
 	dew_point_variable.g_format_type = 'FLT'
-	dew_point_variable.g_format_nan = -32768
+	dew_point_variable.FillValue = -32768
 	dew_point_variable.coordinates = "lon lat alt"
 	dew_point_variable[:] = dew_point
 
 	# mixing_ratio
 	mixing_ratio_variable = dataset.createVariable('WVMR', 'f4', ("time", ), zlib=True)
 	mixing_ratio_variable.standard_name = 'Water_vapor_mixing_ratio'
-	mixing_ratio_variable.units = '1'
+	mixing_ratio_variable.units = 'g/Kg'
 	mixing_ratio_variable.long_name = 'Water Vapor Volume Mixing Ratio'
 	mixing_ratio_variable.g_format_type = 'FLT'
-	mixing_ratio_variable.g_format_nan = -32768
+	mixing_ratio_variable.FillValue = -32768
 	mixing_ratio_variable[:] = mixing_ratio
 
 	# wind_direction
@@ -275,7 +275,7 @@ def convert2netcdf4(data, file):
 	wind_direction_variable.units = 'degree'
 	wind_direction_variable.long_name = 'Wind Direction'
 	wind_direction_variable.g_format_type = 'FLT'
-	wind_direction_variable.g_format_nan = -32768
+	wind_direction_variable.FillValue = -32768
 	wind_direction_variable.coordinates = "lon lat alt"
 	wind_direction_variable.comment = "Wind direction"
 	wind_direction_variable[:] = wind_direction
@@ -286,7 +286,7 @@ def convert2netcdf4(data, file):
 	wind_speed_variable.units = 'm s-1'
 	wind_speed_variable.long_name = 'Wind Speed'
 	wind_speed_variable.g_format_type = 'FLT'
-	wind_speed_variable.g_format_nan = -32768
+	wind_speed_variable.FillValue = -32768
 	wind_speed_variable.coordinates = "lon lat alt"
 	wind_speed_variable.comment = "Wind speed"
 	wind_speed_variable[:] = wind_speed
@@ -297,7 +297,7 @@ def convert2netcdf4(data, file):
 	azimuth_angle_variable.units = 'degree'
 	azimuth_angle_variable.long_name = 'Azimuth angle to the sonde'
 	azimuth_angle_variable.g_format_type = 'FLT'
-	azimuth_angle_variable.g_format_nan = -32768
+	azimuth_angle_variable.FillValue = -32768
 	azimuth_angle_variable[:] = azimuth_angle
 
 	# horizontal_distance
@@ -306,7 +306,7 @@ def convert2netcdf4(data, file):
 	horizontal_distance_variable.units = '100m'
 	horizontal_distance_variable.long_name = 'Horizontal distance to the sonde'
 	horizontal_distance_variable.g_format_type = 'FLT'
-	horizontal_distance_variable.g_format_nan = -32768
+	horizontal_distance_variable.FillValue = -32768
 	horizontal_distance_variable[:] = horizontal_distance
 
 	# longitude
@@ -315,7 +315,7 @@ def convert2netcdf4(data, file):
 	longitude_variable.units = 'degree_east'
 	longitude_variable.long_name = 'Longitude'
 	longitude_variable.g_format_type = 'FLT'
-	longitude_variable.g_format_nan = -32768
+	longitude_variable.FillValue = -32768
 	longitude_variable[:] = longitude
 
 	# latitude
@@ -324,7 +324,7 @@ def convert2netcdf4(data, file):
 	latitude_variable.units = 'degree_north'
 	latitude_variable.long_name = 'Latitude'
 	latitude_variable.g_format_type = 'FLT'
-	latitude_variable.g_format_nan = -32768
+	latitude_variable.FillValue = -32768
 	latitude_variable[:] = latitude
 
 	# significance_key
@@ -334,7 +334,7 @@ def convert2netcdf4(data, file):
 	significance_key_variable.long_name = 'SOND calculated significance key'
 	significance_key_variable.comment = 'See LEVEL TYPE FLAG in https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html'
 	significance_key_variable.g_format_type = 'CHR'
-	significance_key_variable.g_format_nan = -32768
+	significance_key_variable.FillValue = -32768
 	significance_key_variable[:] = significance_key
 
 	# significance_key
@@ -344,7 +344,7 @@ def convert2netcdf4(data, file):
 	recalculated_significance_key_variable.long_name = 'User edited/recalculated significance key'
 	recalculated_significance_key_variable.comment = 'See LEVEL TYPE FLAG in https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html'
 	recalculated_significance_key_variable.g_format_type = 'FLT'
-	recalculated_significance_key_variable.g_format_nan = -32768
+	recalculated_significance_key_variable.FillValue = -32768
 	recalculated_significance_key_variable[:] = recalculated_significance_key
 
 	# radar_height
@@ -354,7 +354,7 @@ def convert2netcdf4(data, file):
 	radar_height_variable.long_name = 'Radar height'
 	radar_height_variable.comment = '30000m subtracted'
 	radar_height_variable.g_format_type = 'FLT'
-	radar_height_variable.g_format_nan = -32768
+	radar_height_variable.FillValue = -32768
 	radar_height_variable[:] = radar_height	
 
 	dataset.close()

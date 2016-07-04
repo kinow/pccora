@@ -28,8 +28,8 @@ def is_int(s):
         return False
 
 def main():
-    wind_file = '/home/kinoshitabd/Downloads/Inv_upper_air_wind_MetService_simple.txt'
-    txt_file = '/home/kinoshitabd/Desktop/INVRCRGL/1994/9403/94032510.txt'
+    wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService_simple.txt'
+    txt_file = '/home/kinow/Desktop/INVRCRGL/1994/9403/94032510.txt'
 
     dates = dict()
 

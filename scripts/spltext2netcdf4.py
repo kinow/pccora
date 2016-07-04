@@ -80,7 +80,7 @@ def parse_wind_file(wind_file):
                             dates[d]['readings'][hpa]['std_wdir'] = -32768
                             dates[d]['readings'][hpa]['std_wspeed'] = -32768
 
-                    # TODO: it is not hPa, is it?
+                    # TODO: it is hPa, right?
                     hpa = sig_levels_col[0]
                     if is_int(hpa):
                         if not hpa in dates[d]['readings']:

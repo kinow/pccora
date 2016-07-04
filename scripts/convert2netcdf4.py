@@ -236,7 +236,6 @@ def convert2netcdf4(data, file):
 	altitude_variable.standard_name = 'altitude'
 	altitude_variable.units = 'm'
 	altitude_variable.long_name = 'Altitude'
-	altitude_variable.comment = '30000m subtracted'
 	altitude_variable.g_format_type = 'FLT'
 	altitude_variable.g_format_nan = -32768
 	altitude_variable.positive = "up"

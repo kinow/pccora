@@ -16,8 +16,12 @@ logger.setLevel(logging.INFO)
 
 UTC = pytz.timezone('UTC')
 
+# Regular expressions for the parser
 PILOT_REGEX = '^([0-9]+)\s*([a-z0-9\s]+)\s+pilot\s+for\s+(.*)$'
 PILOT_PATTERN = re.compile(PILOT_REGEX, flags=re.IGNORECASE)
+
+# Settings for the parsers
+DEFAULT_INTERVAL_THRESHOLD_HOURS = 4 # hours threshold to match a given time with a time in the day (0 or 12)
 
 # http://stackoverflow.com/questions/1265665/python-check-if-a-string-represents-an-int-without-using-try-except
 def is_int(s):
@@ -101,7 +105,6 @@ def main():
 
     dates = parse_wind_file(wind_file)
 
-    pprint(dates)
-
+    
 if __name__ == '__main__':
     main()

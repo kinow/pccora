@@ -100,6 +100,7 @@ def parse_wind_file(wind_file):
 
                 elif line.strip().startswith('Message Numbers'):
                     in_pilot = False
+        return dates
 
 # Had to implement a bit-more-complex state machine or multiple regex'es would be just too slow
 
@@ -154,7 +155,7 @@ class SimpleParser(object):
 
     def tally(self):
         """Tally results, by matching an entry in the wind data and getting wspeed and wdir"""
-        pass
+        pprint(self.wind_data)
 
 class State(object):
 

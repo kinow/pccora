@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import pytz
 import logging
 from collections import namedtuple
+from netCDF4 import Dataset
+import numpy as np
 
 FORMAT = '%(asctime)s %(message)s'
 logger = logging.getLogger()
@@ -533,9 +535,212 @@ def parse_txt_file(txt_file, wind_data):
     parser.parse(txt_file)
     return parser.get_data()
 
+def write_netcdf_file(data, output_file):
+    """Writes the resulting data to a NetCDF file"""
+    dataset = Dataset(output_file, "w", format="NETCDF4_CLASSIC")
+
+    # Dimensions
+    dataset.createDimension("time")
+
+    dataset.setncattr('g.General.SiteWmoId', '93' + str(data.station))
+    dataset.setncattr('g.MeasuringSystem.Longitude', str(data.longitude) + ' degree east')
+    dataset.setncattr('g.MeasuringSystem.Latitude', str(data.latitude) + ' degree north')
+    dataset.setncattr('g.MeasuringSystem.Altitude', str(data.altitude) + ' m')
+    #dataset.setncattr('g.SurfaceObs.Pressure', str(ident['surface_pressure']) + ' hPa')
+    #dataset.setncattr('g.SurfaceObs.Temperature', str(ident['surface_temperature']) + ' °C')
+    #dataset.setncattr('g.SurfaceObs.RelativeHumidity', str(ident['surface_humidity']) + ' %')
+    dataset.setncattr('g.General.SiteCode', "INVRCRGL")
+    dataset.setncattr('g.General.SiteName', "Invercargill")
+    dataset.setncattr('g.General.SiteInstitution', "MetService New Zealand")
+    dataset.setncattr('g.Product.Producer', "National Institute of Water and Atmospheric Research (New Zealand)")
+    dataset.setncattr('g.Product.References', "https://github.com/kinow/pccora")
+
+    #dataset.station_type = ident['station_type']
+    #dataset.region_number = ident['region_number']
+    #dataset.wmo_block_number = ident['wmo_block_number']
+    dataset.wmo_block_number = 93
+    dataset.wmo_station_number = data.station
+    #dataset.wind_speed_unit = str(ident['wind_speed_unit']) + ', comment: 0 = m/s 1 = knots'
+    #dataset.telecommunications_headings = str(ident['telecommunications_headings']) + ', comment: 0 = No 1 = Yes'
+    #dataset.res = ident['reserved']
+    #dataset.sounding_type = str(ident['sounding_type']) + ', comment: 0 = PTU 1 = Only pressure 2 = No PTU (Radar'
+    #dataset.start_mode = str(ident['start_mode']) + ', comment: 0 = Auto 1 = Manual'
+    #dataset.time_elapsed = ident['time_elapsed']
+    #dataset.ptu_rate = ident['ptu_rate']
+    #dataset.spu_serial_number = ident['spu_serial_number']
+    #dataset.year = ident['year']
+    #dataset.month = ident['month']
+    #dataset.day = ident['day']
+    #dataset.julian_date = ident['julian_date']
+    #dataset.hour = ident['hour']
+    #dataset.minute = ident['minute']
+    #dataset.message_year = ident['message_year']
+    #dataset.message_month = ident['message_month']
+    #dataset.message_day = ident['message_day']
+    #dataset.message_hour = ident['message_hour']
+    #dataset.cloud_group = ident['cloud_group']
+    #dataset.weather_group = ident['weather_group']
+    #dataset.napp = ident['napp']
+    #dataset.humidity_correction = ident['humidity_correction']
+    #dataset.success_of_signal = ident['success_of_signal']
+    #dataset.pressure_accept_level = ident['pressure_accept_level']
+    #dataset.pressure_replace_level = ident['pressure_replace_level']
+    #dataset.pressure_reject_level = ident['pressure_reject_level']
+    #dataset.temperature_accept_level = ident['temperature_accept_level']
+    #dataset.temperature_replace_level = ident['temperature_replace_level']
+    #dataset.temperature_reject_level = ident['temperature_reject_level']
+    #dataset.humidity_accept_level = ident['humidity_accept_level']
+    #dataset.humidity_replace_level = ident['humidity_replace_level']
+    #dataset.humidity_reject_level = ident['humidity_reject_level']
+    #dataset.total_omega_count = ident['total_omega_count']
+    #dataset.reason_temination = ident['reason_temination']
+    #dataset.omega_count = ident['omega_count']
+    #dataset.wind_computing_mode = str(ident['wind_computing_mode']) + ', comment: 0 = Remote 1 = Local 2 = Differential'
+    #dataset.wind_mode = str(ident['wind_mode']) + ', comment: 0 = Omega 1 = Loran-C 2 = Radar 255 = Only PTU'
+    #dataset.stations_used = str(ident['stations_used']) + ', comment: One bit for each station 1 = Used 0 = Not used'
+    #dataset.loranc_chains_used = ident['loranc_chains_used']
+    #dataset.gri_chain_1 = ident['gri_chain_1']
+    #dataset.gri_chain_2 = ident['gri_chain_2']
+    #dataset.exclude_loran_transmitters = str(ident['exclude_loran_transmitters']) + ', comment: One bit for each in the chain; and chain 2 transmitted'
+    #dataset.phase_integration_time = str(ident['phase_integration_time']) + ', comment: 0 = time (s) 1 = Altitude (m/MSI'
+    #dataset.phase_integration_time_1 = ident['phase_integration_time_1']
+    #dataset.phase_integration_time_2 = ident['phase_integration_time_2']
+    #dataset.phase_integration_time_3 = ident['phase_integration_time_3']
+    #dataset.phase_integration_time_4 = ident['phase_integration_time_4']
+    #dataset.phase_integration_time_5 = ident['phase_integration_time_5']
+    #dataset.phase_integration_time_6 = ident['phase_integration_time_6']
+    #dataset.phase_integration_change_level_1 = ident['phase_integration_change_level_1']
+    #dataset.phase_integration_change_level_2 = ident['phase_integration_change_level_2']
+    #dataset.phase_integration_change_level_3 = ident['phase_integration_change_level_3']
+    #dataset.phase_integration_change_level_4 = ident['phase_integration_change_level_4']
+    #dataset.phase_integration_change_level_5 = ident['phase_integration_change_level_5']
+    #dataset.phase_integration_change_level_6 = ident['phase_integration_change_level_6']
+    #dataset.reference_pressure = str(ident['reference_pressure']) + ' hPa'
+    #dataset.reference_temperature = str(ident['reference_temperature']) + ' °C'
+    #dataset.reference_humidity = str(ident['reference_humidity']) + ' %'
+
+    dataset.institution = "MetService New Zealand"
+    dataset.datetime = str(data.started_at)
+    dataset.comment = 'For more information about the variables see: https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html'
+
+    elapsed_time = []
+    #logarithmic_pressure = []
+    temperature = []
+    relative_humidity = []
+    #north_wind = []
+    #east_wind = []
+    altitude = []
+    pressure = []
+    dew_point = []
+    #mixing_ratio = []
+    wind_direction = []
+    wind_speed = []
+    #azimuth_angle = []
+    #horizontal_distance = []
+    #longitude = []
+    #latitude = []
+    #significance_key = []
+    #recalculated_significance_key = []
+    #radar_height = []
+    ascrate = []
+
+    for secs, standard_pressure_level in data.standard_pressure_levels.items():
+        elapsed_time.append(secs)
+        temperature.append(standard_pressure_level.temp)
+        relative_humidity.append(standard_pressure_level.rh)
+        altitude.append(standard_pressure_level.altitude)
+        pressure.append(standard_pressure_level.press)
+        dew_point.append(standard_pressure_level.fp)
+        wind_direction.append(standard_pressure_level.direction)
+        wind_speed.append(standard_pressure_level.speed)
+        ascrate.append(standard_pressure_level.ascrate)
+
+    # elapsed_time
+    elapsed_time_variable = dataset.createVariable('elapsed_time', 'f4', ("time", ), zlib=True, fill_value=-32768)
+    elapsed_time_variable.standard_name = 'elapsed_time'
+    elapsed_time_variable.units = 's'
+    elapsed_time_variable.long_name = 'Elapsed time since sonde release'
+    elapsed_time_variable.g_format_type = 'FLT'
+    elapsed_time_variable[:] = elapsed_time
+
+    # temperature
+    temperature_variable = dataset.createVariable('temp', 'f4', ("time", ), zlib=True, fill_value=-32768)
+    temperature_variable.standard_name = 'air_temperature'
+    temperature_variable.units = 'C'
+    temperature_variable.long_name = 'Temperature'
+    temperature_variable.g_format_type = 'FLT'
+    temperature_variable.coordinates = "lon lat alt"
+    temperature_variable[:] = temperature
+
+    # relative_humidity
+    relative_humidity_variable = dataset.createVariable('rh', 'f4', ("time", ), zlib=True, fill_value=-32768)
+    relative_humidity_variable.standard_name = 'relative_humidity'
+    relative_humidity_variable.units = '%'
+    relative_humidity_variable.long_name = 'Relative Humidity'
+    relative_humidity_variable.g_format_type = 'FLT'
+    relative_humidity_variable.coordinates = "lon lat alt"
+    relative_humidity_variable[:] = relative_humidity
+
+    # altitude
+    altitude_variable = dataset.createVariable('alt', 'f4', ("time", ), zlib=True, fill_value=-32768)
+    altitude_variable.standard_name = 'altitude'
+    altitude_variable.units = 'gpm'
+    altitude_variable.long_name = 'Altitude'
+    altitude_variable.g_format_type = 'FLT'
+    altitude_variable.positive = "up"
+    altitude_variable[:] = altitude
+
+    # pressure
+    pressure_variable = dataset.createVariable('press', 'f4', ("time", ), zlib=True, fill_value=-32768)
+    pressure_variable.standard_name = 'air_pressure'
+    pressure_variable.units = 'hPa'
+    pressure_variable.long_name = 'Pressure'
+    pressure_variable.g_format_type = 'FLT'
+    pressure_variable.coordinates = "lon lat alt"
+    pressure_variable[:] = pressure
+
+    # dew_point
+    dew_point_variable = dataset.createVariable('FP', 'f4', ("time", ), zlib=True, fill_value=-32768)
+    dew_point_variable.units = 'C'
+    dew_point_variable.long_name = 'Frostpoint'
+    dew_point_variable.g_format_type = 'FLT'
+    dew_point_variable.coordinates = "lon lat alt"
+    dew_point_variable[:] = dew_point
+
+    # wind_direction
+    wind_direction_variable = dataset.createVariable('wdir', 'f4', ("time", ), zlib=True, fill_value=-32768)
+    wind_direction_variable.standard_name = 'wind_from_direction'
+    wind_direction_variable.units = 'degree'
+    wind_direction_variable.long_name = 'Wind Direction'
+    wind_direction_variable.g_format_type = 'FLT'
+    wind_direction_variable.coordinates = "lon lat alt"
+    wind_direction_variable.comment = "Wind direction"
+    wind_direction_variable[:] = wind_direction
+
+    # wind_speed
+    wind_speed_variable = dataset.createVariable('wspeed', 'f4', ("time", ), zlib=True, fill_value=-32768)
+    wind_speed_variable.standard_name = 'wind_speed'
+    wind_speed_variable.units = 'm s-1'
+    wind_speed_variable.long_name = 'Wind Speed'
+    wind_speed_variable.g_format_type = 'FLT'
+    wind_speed_variable.coordinates = "lon lat alt"
+    wind_speed_variable.comment = "Wind speed"
+    wind_speed_variable[:] = wind_speed
+
+    # ascrate
+    ascrate_variable = dataset.createVariable('ascrate', 'f4', ("time", ), zlib=True, fill_value=-32768)
+    ascrate_variable.standard_name = 'ascrate'
+    ascrate_variable.units = 'm/s'
+    ascrate_variable.long_name = 'Ascension rate'
+    ascrate_variable.g_format_type = 'FLT'
+    ascrate_variable[:] = ascrate 
+
+    dataset.close()
+
 def main():
     wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService_simple2.txt'
     txt_file = '/home/kinow/Downloads/99100110.TXT'
+    output_file = '/home/kinow/Downloads/99100110-with-wind-data.nc'
 
     logger.info('Parsing WIND file')
     dates = parse_wind_file(wind_file)
@@ -545,7 +750,8 @@ def main():
     data = parse_txt_file(txt_file, dates)
     logger.info('Done')
 
-    pprint(data)
+    logger.info('Writing NetCDF file')
+    write_netcdf_file(data, output_file)
     
 if __name__ == '__main__':
     main()

@@ -80,6 +80,7 @@ def parse_wind_file(wind_file):
                     if len(std_levels_col) > 0:
                         hpa = std_levels_col[0]
                         if is_int(hpa):
+                            hpa = str(float(hpa)) # to match the key in the dict... due to different units in the two files
                             if not hpa in dates[d]['press_readings']:
                                 dates[d]['press_readings'][hpa] = dict()
                             if len(std_levels_col) == 3:
@@ -105,8 +106,6 @@ def parse_wind_file(wind_file):
 
                 elif line.strip().startswith('Message Numbers'):
                     in_pilot = False
-        pprint(dates)
-        sys.exit(1)
         return dates
 
 # Had to implement a bit-more-complex state machine or multiple regex'es would be just too slow
@@ -154,13 +153,13 @@ class SimpleParser(object):
             for line in wf:
                 self.parse_line(line)
             if len(self.data.standard_pressure_levels) > 0:
-                self.tally()
+                self._tally()
 
     def parse_line(self, line):
         if self.current_state != None and self.current_state.value(line) != None:
             self.current_state = self.current_state.next()
 
-    def tally(self):
+    def _tally(self):
         """Tally results, by matching an entry in the wind data and getting wspeed and wdir"""
 
         needle = self.data.started_at
@@ -169,8 +168,23 @@ class SimpleParser(object):
         for date in haystack:
             if abs(date - needle) <= DEFAULT_INTERVAL:
                 wind_data = self.wind_data[date]
+                # Match pressure readings
+                for press, dic in wind_data['press_readings'].items():
+                    if press in self._get_standard_pressure_levels2():
+                        standard_pressure_level = self._get_standard_pressure_levels2()[press]
+                        standard_pressure_level.speed = dic['std_wspeed']
+                        standard_pressure_level.direction = dic['std_wdir']
                 pprint(wind_data)
-                print("----") 
+                pprint(self._get_standard_pressure_levels2())
+                sys.exit(1)
+
+    def _get_standard_pressure_levels2(self):
+        """Return the same dict, but where keys are pressure levels instead of secs. This way we reduce
+        the number of loops per pressure reading in the wind_data"""
+        d = dict()
+        for sec, standard_pressure_level in self.data.standard_pressure_levels.items():
+            d[standard_pressure_level.press] = standard_pressure_level
+        return d
 
 class State(object):
 
@@ -312,7 +326,19 @@ class LocationState(State):
             pass
         return s
 
-SignificantLevel = namedtuple('SignificantLevel', 'press altitude temp rh fp speed direction')
+class SignificantLevel(object):
+
+    def __init__(self, press, altitude, temp, rh, fp, speed, direction):
+        self.press = press
+        self.altitude = altitude
+        self.temp = temp
+        self.rh = rh
+        self.fp = fp
+        self.speed = speed
+        self.direction = direction
+
+    def __repr__(self):
+        return "SignificantLevel(press=%s, altitude=%s, temp=%s, rh=%s, fp=%s, speed=%s, direction=%s)" % (self.press, self.altitude, self.temp, self.rh, self.fp, self.speed, self.direction)
 
 class SignificantLevelsState1(State):
 
@@ -388,7 +414,21 @@ class SignificantLevelsState1(State):
                 s = None
         return s
 
-StandardPressureLevel = namedtuple('StandardPressureLevel', 'press altitude temp rh fp ascrate speed direction')
+class StandardPressureLevel(object):
+
+    def __init__(self, press, altitude, temp, rh, fp, ascrate, speed, direction):
+        self.press = press
+        self.altitude = altitude
+        self.temp = temp
+        self.rh = rh
+        self.fp  = fp
+        self.ascrate = ascrate
+        self.speed = speed
+        self.direction = direction
+
+    def __repr__(self):
+        return "StandardPressureLevel(press=%s, altitude=%s, temp=%s, rh=%s, fp=%s, ascrate=%s, speed=%s, direction=%s)" % (self.press, self.altitude, self.temp, self.rh, self.fp, self.ascrate, self.speed, self.direction)
+
 
 class StandardPressureLevelsState1(State):
 

@@ -46,9 +46,9 @@ def convert2netcdf4(data, file):
 	dataset.createDimension("time")
 
 	dataset.setncattr('g.General.SiteWmoId', ident['wmo_block_number'] + ident['wmo_station_number'])
-	dataset.setncattr('g.MeasuringSystem.Longitude', ident['station_longitude'])
-	dataset.setncattr('g.MeasuringSystem.Latitude', ident['station_latitude'])
-	dataset.setncattr('g.MeasuringSystem.Altitude', ident['station_altitude'])
+	dataset.setncattr('g.MeasuringSystem.Longitude', str(ident['station_longitude'])) + ' degree east'
+	dataset.setncattr('g.MeasuringSystem.Latitude', str(ident['station_latitude'])) + ' degree north'
+	dataset.setncattr('g.MeasuringSystem.Altitude', str(ident['station_altitude'])) + ' m'
 	dataset.setncattr('g.SurfaceObs.Pressure', str(ident['surface_pressure']) + ' hPa')
 	dataset.setncattr('g.SurfaceObs.Temperature', str(ident['surface_temperature']) + ' °C')
 	dataset.setncattr('g.SurfaceObs.RelativeHumidity', str(ident['surface_humidity']) + ' %')

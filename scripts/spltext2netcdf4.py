@@ -1,7 +1,7 @@
 
 import re
 from pprint import pprint, pformat
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import logging
 from collections import namedtuple
@@ -24,6 +24,7 @@ STARTED_AT_REGEX = '^started\s*at\s*(.*)$'
 
 # Settings for the parsers
 DEFAULT_INTERVAL_THRESHOLD_HOURS = 4 # hours threshold to match a given time with a time in the day (0 or 12)
+DEFAULT_INTERVAL = timedelta(hours=DEFAULT_INTERVAL_THRESHOLD_HOURS)
 
 # http://stackoverflow.com/questions/1265665/python-check-if-a-string-represents-an-int-without-using-try-except
 def is_int(s):
@@ -72,31 +73,33 @@ def parse_wind_file(wind_file):
                 if line.count('|') == 4 and line.count('hPa') == 0:
 
                     columns = line.split('|')
-                    std_levels_col = columns[0].replace('/', ' ').split()
+                    std_levels_col = columns[0].replace('/', '').split()
                     sig_levels_col = columns[1].replace('/', '').split()
 
-                    hpa = std_levels_col[0]
-                    if is_int(hpa):
-                        if not hpa in dates[d]['readings']:
-                            dates[d]['readings'][hpa] = dict()
-                        if len(std_levels_col) == 3:
-                            dates[d]['readings'][hpa]['std_wdir'] = std_levels_col[1]
-                            dates[d]['readings'][hpa]['std_wspeed'] = std_levels_col[2]
-                        else:
-                            dates[d]['readings'][hpa]['std_wdir'] = -32768
-                            dates[d]['readings'][hpa]['std_wspeed'] = -32768
+                    if len(std_levels_col) > 0:
+                        hpa = std_levels_col[0]
+                        if is_int(hpa):
+                            if not hpa in dates[d]['readings']:
+                                dates[d]['readings'][hpa] = dict()
+                            if len(std_levels_col) == 3:
+                                dates[d]['readings'][hpa]['std_wdir'] = std_levels_col[1]
+                                dates[d]['readings'][hpa]['std_wspeed'] = std_levels_col[2]
+                            else:
+                                dates[d]['readings'][hpa]['std_wdir'] = -32768
+                                dates[d]['readings'][hpa]['std_wspeed'] = -32768
 
                     # TODO: it is hPa, right?
-                    hpa = sig_levels_col[0]
-                    if is_int(hpa):
-                        if not hpa in dates[d]['readings']:
-                            dates[d]['readings'][hpa] = dict()
-                        if len(sig_levels_col) == 3:
-                            dates[d]['readings'][hpa]['sig_wdir'] = sig_levels_col[1]
-                            dates[d]['readings'][hpa]['sig_wspeed'] = sig_levels_col[2]
-                        else:
-                            dates[d]['readings'][hpa]['sig_wdir'] = -32768
-                            dates[d]['readings'][hpa]['sig_wspeed'] = -32768
+                    if len(sig_levels_col) > 0:
+                        hpa = sig_levels_col[0]
+                        if is_int(hpa):
+                            if not hpa in dates[d]['readings']:
+                                dates[d]['readings'][hpa] = dict()
+                            if len(sig_levels_col) == 3:
+                                dates[d]['readings'][hpa]['sig_wdir'] = sig_levels_col[1]
+                                dates[d]['readings'][hpa]['sig_wspeed'] = sig_levels_col[2]
+                            else:
+                                dates[d]['readings'][hpa]['sig_wdir'] = -32768
+                                dates[d]['readings'][hpa]['sig_wspeed'] = -32768
 
                 elif line.strip().startswith('Message Numbers'):
                     in_pilot = False
@@ -155,7 +158,17 @@ class SimpleParser(object):
 
     def tally(self):
         """Tally results, by matching an entry in the wind data and getting wspeed and wdir"""
-        pprint(self.wind_data)
+        needle = self.data.started_at
+        haystack = self.wind_data
+
+        for date in haystack:
+            print(needle.strftime("%Y/%m/%d %H:%M")) 
+            print(date.strftime("%Y/%m/%d %H:%M")) 
+            print("----") 
+            if abs(date - needle) <= DEFAULT_INTERVAL:
+                print(needle.strftime("%Y/%m/%d %H:%M")) 
+                print(date.strftime("%Y/%m/%d %H:%M")) 
+                print("----") 
 
 class State(object):
 
@@ -460,11 +473,15 @@ def parse_txt_file(txt_file, wind_data):
     return parser.get_data()
 
 def main():
-    wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService_simple.txt'
+    wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService.txt'
     txt_file = '/home/kinow/Downloads/94032510.txt'
 
+    logger.info('Parsing WIND file')
     dates = parse_wind_file(wind_file)
+    logger.info('Done')
+    logger.info('Parsing TXT file')
     data = parse_txt_file(txt_file, dates)
+    logger.info('Done')
 
     pprint(data)
     

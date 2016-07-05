@@ -20,6 +20,8 @@ UTC = pytz.timezone('UTC')
 PILOT_REGEX = '^([0-9]+)\s*([a-z0-9\s]+)\s+pilot\s+for\s+(.*)$'
 PILOT_PATTERN = re.compile(PILOT_REGEX, flags=re.IGNORECASE)
 
+STARTED_AT_REGEX = '^started\s*at\s*(.*)$'
+
 # Settings for the parsers
 DEFAULT_INTERVAL_THRESHOLD_HOURS = 4 # hours threshold to match a given time with a time in the day (0 or 12)
 
@@ -99,12 +101,229 @@ def parse_wind_file(wind_file):
                 elif line.strip().startswith('Message Numbers'):
                     in_pilot = False
 
+# Had to implement a bit-more-complex state machine or multiple regex'es would be just too slow
+
+class TxtFile(object):
+
+    def __init__(self):
+        self.started_at = ''
+        self.station = 0
+        self.longitude = 0.0
+        self.latitude = 0.0
+        self.altitude = 0
+        self.sounding_type = ''
+        self.rs_number = ''
+        self.serial_number = ''
+        self.clouds = ''
+        self.burst_height = 0
+        self.significant_levels = dict()
+        self.standard_pressure_levels = dict()
+
+    def __repr__(self):
+        return """Vaisala Text Data: 
+StartedAt     [""" + self.started_at + """]
+Station       [""" + str(self.station) + """]
+Latitude      [""" + str(self.latitude) + """]
+Longitude     [""" + str(self.longitude) + """]
+Altitude      [""" + str(self.altitude) + """]"""
+
+class SimpleParser(object):
+
+    def __init__(self):
+        self.data = TxtFile()
+        self.current_state = StartedAtState(self.data)
+
+    def get_data(self):
+        return self.data
+
+    def parse(self, line):
+        if line.strip() == '':
+            continue
+        if self.current_state != None and self.current_state.value(line) != None:
+            self.current_state = self.current_state.next()
+
+class State(object):
+
+    def __init__(self, txt_file):
+        self.next_state = None
+        self.txt_file = txt_file
+
+    def next(self):
+        return self.next_state
+
+    def value(self, line):
+        return None
+
+class StartedAtState(State):
+
+    def __init__(self, txt_file):
+        super().__init__(txt_file)
+        self.next_state = StationState(txt_file)
+
+    def value(self, line):
+        s = None
+        try:
+            idx = line.index('Started at') + len('Started at')
+            if idx >= 0:
+                length = len(line)
+                s = line[idx:length]
+                s = s.strip()
+                self.txt_file.started_at = s
+        except ValueError:
+            pass
+        return s
+
+class StationState(State):
+
+    def __init__(self, txt_file):
+        super().__init__(txt_file)
+        self.next_state = LocationState(txt_file)
+
+    def value(self, line):
+        s = None
+        try:
+            idx = line.index('Station') + len('Station')
+            if idx >= 0:
+                length = len(line)
+                s = line[idx:length]
+                s = s.replace(':', '')
+                s = s.strip()
+                self.txt_file.station = int(s)
+        except ValueError:
+            pass
+        return s
+
+class LocationState(State):
+
+    def __init__(self, txt_file):
+        super().__init__(txt_file)
+        self.next_state = SignificantLevelsState(txt_file)
+
+    def value(self, line):
+        s = None
+        try:
+            idx = line.index('Location') + len('Location')
+            if idx >= 0:
+                length = len(line)
+                s = line[idx:length]
+                s = s.replace(':', '')
+                s = s.strip()
+                
+                latitude = ''
+                idx2 = 1
+                for c in s:
+                    if c == ' ':
+                        break
+                    latitude += c
+                    idx2 += 1
+
+                self.txt_file.latitude = float(latitude)
+                s = s[idx2:]
+                s = s.strip()
+
+                direction = ''
+                idx2 = 1
+                for c in s:
+                    if c == ' ':
+                        break
+                    direction += c
+                    idx2 += 1
+                if direction.lower() == 's':
+                    self.txt_file.latitude = float(self.txt_file.latitude * -1)
+                # ignore other possible values
+                s = s[idx2:]
+                s = s.strip()
+
+                longitude = ''
+                idx2 = 1
+                for c in s:
+                    if c == ' ':
+                        break
+                    longitude += c
+                    idx2 += 1
+
+                self.txt_file.longitude = float(longitude)
+                s = s[idx2:]
+                s = s.strip()
+
+                direction = ''
+                idx2 = 1
+                for c in s:
+                    if c == ' ':
+                        break
+                    direction += c
+                    idx2 += 1
+                if direction.lower() != 'e':
+                    self.txt_file.longitude = float(self.txt_file.longitude * -1)
+                # ignore other possible values
+                s = s[idx2:]
+                s = s.strip()
+
+                altitude = ''
+                idx2 = 1
+                for c in s:
+                    if c == ' ':
+                        break
+                    altitude += c
+                    idx2 += 1
+
+                self.txt_file.altitude = float(altitude)
+        except ValueError:
+            pass
+        return s
+
+class SignificantLevelsState(State):
+
+    def __init__(self, txt_file):
+        super().__init__(txt_file)
+        self.next_state = None
+        self.title_found = False
+        self.headers1_found = False
+        self.headers2_found = False
+
+    def value(self, line):
+        s = None
+        if headers2_found:
+            if line.strip()[0].lower() != 's':
+                values = line.split(' ')
+                if len(values) >= 7:
+                    minutes = values[0]
+                    seconds = values[1]
+                    press   = values[2]
+                    height  = values[3]
+                    temp    = values[4]
+                    rh      = values[5]
+                    fp      = values[6]
+                    # FIXME: add to element
+        try:
+            idx = line.index('Significant levels: Temperature/Humidity') + len('Significant levels: Temperature/Humidity')
+            if idx >= 0:
+                self.title_found = True
+                s = self.title_found
+        except ValueError:
+            pass
+        return s
+
+def parse_txt_file(txt_file):
+    """
+    Parse the Vaisala txt file, returning a mixed dict.
+    """
+    parser = SimpleParser()
+    with open(txt_file, 'r') as wf:
+        for line in wf:
+            parser.parse(line)
+
+    return parser.get_data()
+
 def main():
     wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService_simple.txt'
     txt_file = '/home/kinow/Downloads/94032510.txt'
 
     dates = parse_wind_file(wind_file)
 
+    data = parse_txt_file(txt_file)
+
+    pprint(data)
     
 if __name__ == '__main__':
     main()

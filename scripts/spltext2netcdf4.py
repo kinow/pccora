@@ -275,7 +275,7 @@ class LocationState(State):
             pass
         return s
 
-SignificantLevel = namedtuple('SignificantLevel', 'press altitude temp rh fp')
+SignificantLevel = namedtuple('SignificantLevel', 'press altitude temp rh fp speed direction')
 
 class SignificantLevelsState1(State):
 
@@ -317,7 +317,7 @@ class SignificantLevelsState1(State):
 
                     secs = self.calc_secs(minutes, seconds)
                     if secs not in self.txt_file.significant_levels:
-                        self.txt_file.significant_levels[secs] = SignificantLevel(press=press, altitude=height, temp=temp, rh=rh, fp=fp)
+                        self.txt_file.significant_levels[secs] = SignificantLevel(press=press, altitude=height, temp=temp, rh=rh, fp=fp, speed='', direction='')
                     # FIXME: add to element
                     #pprint(minutes)
                     self.next_state = self

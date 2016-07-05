@@ -45,10 +45,10 @@ def convert2netcdf4(data, file):
 	# Dimensions
 	dataset.createDimension("time")
 
-	dataset.setncattr('g.General.SiteWmoId', str(ident['wmo_block_number']) + str(ident['wmo_station_number']))
-	dataset.setncattr('g.MeasuringSystem.Longitude', str(ident['station_longitude']))
-	dataset.setncattr('g.MeasuringSystem.Latitude', str(ident['station_latitude']))
-	dataset.setncattr('g.MeasuringSystem.Altitude', str(ident['station_altitude']))
+	dataset.setncattr('g.General.SiteWmoId', ident['wmo_block_number'] + ident['wmo_station_number'])
+	dataset.setncattr('g.MeasuringSystem.Longitude', ident['station_longitude'])
+	dataset.setncattr('g.MeasuringSystem.Latitude', ident['station_latitude'])
+	dataset.setncattr('g.MeasuringSystem.Altitude', ident['station_altitude'])
 	dataset.setncattr('g.SurfaceObs.Pressure', str(ident['surface_pressure']) + ' hPa')
 	dataset.setncattr('g.SurfaceObs.Temperature', str(ident['surface_temperature']) + ' °C')
 	dataset.setncattr('g.SurfaceObs.RelativeHumidity', str(ident['surface_humidity']) + ' %')
@@ -58,68 +58,68 @@ def convert2netcdf4(data, file):
 	dataset.setncattr('g.Product.Producer', "National Institute of Water and Atmospheric Research (New Zealand)")
 	dataset.setncattr('g.Product.References', "https://github.com/kinow/pccora")
 
-	dataset.station_type = str(ident['station_type'])
-	dataset.region_number = str(ident['region_number'])
-	dataset.wmo_block_number = str(ident['wmo_block_number'])
-	dataset.wmo_station_number = str(ident['wmo_station_number'])
+	dataset.station_type = ident['station_type']
+	dataset.region_number = ident['region_number']
+	dataset.wmo_block_number = ident['wmo_block_number']
+	dataset.wmo_station_number = ident['wmo_station_number']
 	dataset.wind_speed_unit = str(ident['wind_speed_unit']) + ', comment: 0 = m/s 1 = knots'
 	dataset.telecommunications_headings = str(ident['telecommunications_headings']) + ', comment: 0 = No 1 = Yes'
-	dataset.res = str(ident['reserved'])
-	dataset.sounding_type = str(ident['sounding_type']) + ', comment: 0 = PTU 1 = Only pressure 2 = No PTU (Radar)'
+	dataset.res = ident['reserved']
+	dataset.sounding_type = str(ident['sounding_type']) + ', comment: 0 = PTU 1 = Only pressure 2 = No PTU (Radar'
 	dataset.start_mode = str(ident['start_mode']) + ', comment: 0 = Auto 1 = Manual'
-	dataset.time_elapsed = str(ident['time_elapsed'])
-	dataset.ptu_rate = str(ident['ptu_rate'])
-	dataset.spu_serial_number = str(ident['spu_serial_number'])
-	dataset.year = str(ident['year'])
-	dataset.month = str(ident['month'])
-	dataset.day = str(ident['day'])
-	dataset.julian_date = str(ident['julian_date'])
-	dataset.hour = str(ident['hour'])
-	dataset.minute = str(ident['minute'])
-	dataset.message_year = str(ident['message_year'])
-	dataset.message_month = str(ident['message_month'])
-	dataset.message_day = str(ident['message_day'])
-	dataset.message_hour = str(ident['message_hour'])
-	dataset.cloud_group = str(ident['cloud_group'])
-	dataset.weather_group = str(ident['weather_group'])
-	dataset.napp = str(ident['napp'])
-	dataset.humidity_correction = str(ident['humidity_correction'])
-	dataset.success_of_signal = str(ident['success_of_signal'])
-	dataset.pressure_accept_level = str(ident['pressure_accept_level'])
-	dataset.pressure_replace_level = str(ident['pressure_replace_level'])
-	dataset.pressure_reject_level = str(ident['pressure_reject_level'])
-	dataset.temperature_accept_level = str(ident['temperature_accept_level'])
-	dataset.temperature_replace_level = str(ident['temperature_replace_level'])
-	dataset.temperature_reject_level = str(ident['temperature_reject_level'])
-	dataset.humidity_accept_level = str(ident['humidity_accept_level'])
-	dataset.humidity_replace_level = str(ident['humidity_replace_level'])
-	dataset.humidity_reject_level = str(ident['humidity_reject_level'])
-	dataset.total_omega_count = str(ident['total_omega_count'])
-	dataset.reason_temination = str(ident['reason_temination'])
-	dataset.omega_count = str(ident['omega_count'])
+	dataset.time_elapsed = ident['time_elapsed']
+	dataset.ptu_rate = ident['ptu_rate']
+	dataset.spu_serial_number = ident['spu_serial_number']
+	dataset.year = ident['year']
+	dataset.month = ident['month']
+	dataset.day = ident['day']
+	dataset.julian_date = ident['julian_date']
+	dataset.hour = ident['hour']
+	dataset.minute = ident['minute']
+	dataset.message_year = ident['message_year']
+	dataset.message_month = ident['message_month']
+	dataset.message_day = ident['message_day']
+	dataset.message_hour = ident['message_hour']
+	dataset.cloud_group = ident['cloud_group']
+	dataset.weather_group = ident['weather_group']
+	dataset.napp = ident['napp']
+	dataset.humidity_correction = ident['humidity_correction']
+	dataset.success_of_signal = ident['success_of_signal']
+	dataset.pressure_accept_level = ident['pressure_accept_level']
+	dataset.pressure_replace_level = ident['pressure_replace_level']
+	dataset.pressure_reject_level = ident['pressure_reject_level']
+	dataset.temperature_accept_level = ident['temperature_accept_level']
+	dataset.temperature_replace_level = ident['temperature_replace_level']
+	dataset.temperature_reject_level = ident['temperature_reject_level']
+	dataset.humidity_accept_level = ident['humidity_accept_level']
+	dataset.humidity_replace_level = ident['humidity_replace_level']
+	dataset.humidity_reject_level = ident['humidity_reject_level']
+	dataset.total_omega_count = ident['total_omega_count']
+	dataset.reason_temination = ident['reason_temination']
+	dataset.omega_count = ident['omega_count']
 	dataset.wind_computing_mode = str(ident['wind_computing_mode']) + ', comment: 0 = Remote 1 = Local 2 = Differential'
 	dataset.wind_mode = str(ident['wind_mode']) + ', comment: 0 = Omega 1 = Loran-C 2 = Radar 255 = Only PTU'
 	dataset.stations_used = str(ident['stations_used']) + ', comment: One bit for each station 1 = Used 0 = Not used'
-	dataset.loranc_chains_used = str(ident['loranc_chains_used'])
-	dataset.gri_chain_1 = str(ident['gri_chain_1'])
-	dataset.gri_chain_2 = str(ident['gri_chain_2'])
+	dataset.loranc_chains_used = ident['loranc_chains_used']
+	dataset.gri_chain_1 = ident['gri_chain_1']
+	dataset.gri_chain_2 = ident['gri_chain_2']
 	dataset.exclude_loran_transmitters = str(ident['exclude_loran_transmitters']) + ', comment: One bit for each in the chain; and chain 2 transmitted'
-	dataset.phase_integration_time = str(ident['phase_integration_time']) + ', comment: 0 = time (s) 1 = Altitude (m/MSI)'
-	dataset.phase_integration_time_1 = str(ident['phase_integration_time_1'])
-	dataset.phase_integration_time_2 = str(ident['phase_integration_time_2'])
-	dataset.phase_integration_time_3 = str(ident['phase_integration_time_3'])
-	dataset.phase_integration_time_4 = str(ident['phase_integration_time_4'])
-	dataset.phase_integration_time_5 = str(ident['phase_integration_time_5'])
-	dataset.phase_integration_time_6 = str(ident['phase_integration_time_6'])
-	dataset.phase_integration_change_level_1 = str(ident['phase_integration_change_level_1'])
-	dataset.phase_integration_change_level_2 = str(ident['phase_integration_change_level_2'])
-	dataset.phase_integration_change_level_3 = str(ident['phase_integration_change_level_3'])
-	dataset.phase_integration_change_level_4 = str(ident['phase_integration_change_level_4'])
-	dataset.phase_integration_change_level_5 = str(ident['phase_integration_change_level_5'])
-	dataset.phase_integration_change_level_6 = str(ident['phase_integration_change_level_6'])
-	dataset.reference_pressure = str(ident['reference_pressure'])
-	dataset.reference_temperature = str(ident['reference_temperature'])
-	dataset.reference_humidity = str(ident['reference_humidity'])
+	dataset.phase_integration_time = str(ident['phase_integration_time']) + ', comment: 0 = time (s) 1 = Altitude (m/MSI'
+	dataset.phase_integration_time_1 = ident['phase_integration_time_1']
+	dataset.phase_integration_time_2 = ident['phase_integration_time_2']
+	dataset.phase_integration_time_3 = ident['phase_integration_time_3']
+	dataset.phase_integration_time_4 = ident['phase_integration_time_4']
+	dataset.phase_integration_time_5 = ident['phase_integration_time_5']
+	dataset.phase_integration_time_6 = ident['phase_integration_time_6']
+	dataset.phase_integration_change_level_1 = ident['phase_integration_change_level_1']
+	dataset.phase_integration_change_level_2 = ident['phase_integration_change_level_2']
+	dataset.phase_integration_change_level_3 = ident['phase_integration_change_level_3']
+	dataset.phase_integration_change_level_4 = ident['phase_integration_change_level_4']
+	dataset.phase_integration_change_level_5 = ident['phase_integration_change_level_5']
+	dataset.phase_integration_change_level_6 = ident['phase_integration_change_level_6']
+	dataset.reference_pressure = ident['reference_pressure']
+	dataset.reference_temperature = ident['reference_temperature']
+	dataset.reference_humidity = ident['reference_humidity']
 
 	dataset.institution = "MetService New Zealand"
 	dataset.datetime = str(ident['datetime'])

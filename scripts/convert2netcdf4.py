@@ -117,9 +117,9 @@ def convert2netcdf4(data, file):
 	dataset.phase_integration_change_level_4 = ident['phase_integration_change_level_4']
 	dataset.phase_integration_change_level_5 = ident['phase_integration_change_level_5']
 	dataset.phase_integration_change_level_6 = ident['phase_integration_change_level_6']
-	dataset.reference_pressure = ident['reference_pressure']
-	dataset.reference_temperature = ident['reference_temperature']
-	dataset.reference_humidity = ident['reference_humidity']
+	dataset.reference_pressure = str(ident['reference_pressure']) + ' hPa'
+	dataset.reference_temperature = str(ident['reference_temperature']) + ' °C'
+	dataset.reference_humidity = str(ident['reference_humidity']) + ' %'
 
 	dataset.institution = "MetService New Zealand"
 	dataset.datetime = str(ident['datetime'])

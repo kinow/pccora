@@ -40,15 +40,15 @@ def convert2netcdf4(data, file):
 	#data_data = data['data']
 	hires_data = data['hires_data']
 
-	dataset = Dataset(file, "w", format="NETCDF4")
+	dataset = Dataset(file, "w", format="NETCDF4_CLASSIC")
 
 	# Dimensions
 	dataset.createDimension("time")
 
 	dataset.setncattr('g.General.SiteWmoId', ident['wmo_block_number'] + ident['wmo_station_number'])
-	dataset.setncattr('g.MeasuringSystem.Longitude', str(ident['station_longitude'])) + ' degree east'
-	dataset.setncattr('g.MeasuringSystem.Latitude', str(ident['station_latitude'])) + ' degree north'
-	dataset.setncattr('g.MeasuringSystem.Altitude', str(ident['station_altitude'])) + ' m'
+	dataset.setncattr('g.MeasuringSystem.Longitude', str('N/A' if None == ident['station_longitude'] else ident['station_longitude']) + ' degree east')
+	dataset.setncattr('g.MeasuringSystem.Latitude', str(ident['station_latitude']) + ' degree north')
+	dataset.setncattr('g.MeasuringSystem.Altitude', str(ident['station_altitude']) + ' m')
 	dataset.setncattr('g.SurfaceObs.Pressure', str(ident['surface_pressure']) + ' hPa')
 	dataset.setncattr('g.SurfaceObs.Temperature', str(ident['surface_temperature']) + ' °C')
 	dataset.setncattr('g.SurfaceObs.RelativeHumidity', str(ident['surface_humidity']) + ' %')
@@ -312,7 +312,7 @@ def convert2netcdf4(data, file):
 	latitude_variable[:] = latitude
 
 	# significance_key
-	significance_key_variable = dataset.createVariable('significance_key', 'B', ("time", ), zlib=True, fill_value=-32768)
+	significance_key_variable = dataset.createVariable('significance_key', 'i1', ("time", ), zlib=True, fill_value=-32768)
 	significance_key_variable.standard_name = 'significance_key'
 	significance_key_variable.units = 'bit_pattern'
 	significance_key_variable.long_name = 'SOND calculated significance key'

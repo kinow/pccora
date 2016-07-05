@@ -121,7 +121,7 @@ class TxtFile(object):
 
     def __repr__(self):
         return """Vaisala Text Data: 
-StartedAt     [""" + self.started_at + """]
+StartedAt     [""" + self.started_at.strftime("%Y-%m-%d %H:%M") + """]
 Station       [""" + str(self.station) + """]
 Latitude      [""" + str(self.latitude) + """]
 Longitude     [""" + str(self.longitude) + """]
@@ -145,10 +145,16 @@ class SimpleParser(object):
         with open(txt_file, 'r') as wf:
             for line in wf:
                 self.parse_line(line)
+            if len(self.data.standard_pressure_levels) > 0:
+                self.tally()
 
     def parse_line(self, line):
         if self.current_state != None and self.current_state.value(line) != None:
             self.current_state = self.current_state.next()
+
+    def tally(self):
+        """Tally results, by matching an entry in the wind data and getting wspeed and wdir"""
+        pass
 
 class State(object):
 
@@ -179,7 +185,11 @@ class StartedAtState(State):
                 length = len(line)
                 s = line[idx:length]
                 s = s.strip()
-                self.txt_file.started_at = s
+                # dates will be like:   25 March 94 10:51 GMT
+                idx2 = s.index(':')
+                if idx2 > 0:
+                    s = s[0:idx2+3]
+                    self.txt_file.started_at = datetime.strptime(s, "%d %B %y %H:%M")
         except ValueError:
             pass
         return s

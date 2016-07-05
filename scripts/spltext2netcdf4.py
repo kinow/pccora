@@ -1,6 +1,6 @@
 
 import re
-from pprint import pprint
+from pprint import pprint, pformat
 from datetime import datetime
 import pytz
 import logging
@@ -125,7 +125,9 @@ StartedAt     [""" + self.started_at + """]
 Station       [""" + str(self.station) + """]
 Latitude      [""" + str(self.latitude) + """]
 Longitude     [""" + str(self.longitude) + """]
-Altitude      [""" + str(self.altitude) + """]"""
+Altitude      [""" + str(self.altitude) + """]
+Sig Levels    [""" + pformat(self.significant_levels, indent=4) + """]
+S P Levels    [""" + pformat(self.standard_pressure_levels, indent=4) + """]"""
 
 class SimpleParser(object):
 
@@ -137,8 +139,6 @@ class SimpleParser(object):
         return self.data
 
     def parse(self, line):
-        if line.strip() == '':
-            continue
         if self.current_state != None and self.current_state.value(line) != None:
             self.current_state = self.current_state.next()
 
@@ -147,6 +147,9 @@ class State(object):
     def __init__(self, txt_file):
         self.next_state = None
         self.txt_file = txt_file
+
+    def calc_secs(self, mins, secs):
+        return secs + (mins * 60)
 
     def next(self):
         return self.next_state
@@ -197,7 +200,7 @@ class LocationState(State):
 
     def __init__(self, txt_file):
         super().__init__(txt_file)
-        self.next_state = SignificantLevelsState(txt_file)
+        self.next_state = SignificantLevelsState1(txt_file)
 
     def value(self, line):
         s = None
@@ -272,7 +275,9 @@ class LocationState(State):
             pass
         return s
 
-class SignificantLevelsState(State):
+SignificantLevel = namedtuple('SignificantLevel', 'press altitude temp rh fp')
+
+class SignificantLevelsState1(State):
 
     def __init__(self, txt_file):
         super().__init__(txt_file)
@@ -280,28 +285,153 @@ class SignificantLevelsState(State):
         self.title_found = False
         self.headers1_found = False
         self.headers2_found = False
+        self.white_lines = 0
+
+    def reset_states(self):
+        self.headers1_found = False
+        self.headers2_found = False
 
     def value(self, line):
         s = None
-        if headers2_found:
+        self.next_state = None
+        if line.strip() == '' and self.title_found == True:
+            self.white_lines += 1
+
+        if self.white_lines == 4:
+            self.next_state = StandardPressureLevelsState1(self.txt_file)
+            return True
+        elif line.strip() == '':
+            return
+
+        if self.headers2_found:
             if line.strip()[0].lower() != 's':
-                values = line.split(' ')
+                values = line.split()
                 if len(values) >= 7:
-                    minutes = values[0]
-                    seconds = values[1]
+                    minutes = int(values[0])
+                    seconds = int(values[1])
                     press   = values[2]
                     height  = values[3]
                     temp    = values[4]
                     rh      = values[5]
                     fp      = values[6]
+
+                    secs = self.calc_secs(minutes, seconds)
+                    if secs not in self.txt_file.significant_levels:
+                        self.txt_file.significant_levels[secs] = SignificantLevel(press=press, altitude=height, temp=temp, rh=rh, fp=fp)
                     # FIXME: add to element
-        try:
-            idx = line.index('Significant levels: Temperature/Humidity') + len('Significant levels: Temperature/Humidity')
-            if idx >= 0:
-                self.title_found = True
-                s = self.title_found
-        except ValueError:
-            pass
+                    #pprint(minutes)
+                    self.next_state = self
+            else:
+                self.reset_states()
+        elif self.headers1_found:
+            s = line.strip()
+            if len(s) > 3 and s[0:3].lower() == 'min':
+                self.reset_states()
+                self.headers2_found = True
+                self.next_state = self
+            else:
+                s = None
+        elif self.title_found:
+            s = line.strip()
+            if len(s) > 3 and s[0:4].lower() == 'time':
+                self.reset_states()
+                self.headers1_found = True
+                self.next_state = self
+            else:
+                s = None
+        else:
+            try:
+                print(line)
+                idx = line.index('Significant levels: Temperature/Humidity') + len('Significant levels: Temperature/Humidity')
+                if idx >= 0:
+                    self.reset_states()
+                    self.title_found = True
+                    self.white_lines = 0
+                    self.next_state = self
+            except ValueError:
+                s = None
+        return s
+
+StandardPressureLevel = namedtuple('StandardPressureLevel', 'press altitude temp rh fp ascrate speed direction')
+
+# FIXME not using !
+class StandardPressureLevelsState1(State):
+
+    def __init__(self, txt_file):
+        super().__init__(txt_file)
+        self.next_state = None
+        self.title_found = False
+        self.headers1_found = False
+        self.headers2_found = False
+        self.white_lines = 0
+
+    def reset_states(self):
+        self.headers1_found = False
+        self.headers2_found = False
+
+    def value(self, line):
+        s = None
+        self.next_state = None
+        if line.strip() == '' and self.title_found == True:
+            self.white_lines += 1
+
+        if self.white_lines == 4:
+            #self.next_state = StandardPressureLevelsState2()
+            self.next_state = None
+            return s
+        elif line.strip() == '':
+            return
+
+        if self.headers2_found:
+            if line.strip()[0].lower() != 's':
+                values = line.split()
+                if len(values) >= 8:
+                    try:
+                        minutes = int(values[0])
+                        seconds = int(values[1])
+                    except ValueError:
+                        return
+                    press   = values[2]
+                    height  = values[3]
+                    temp    = values[4]
+                    rh      = values[5]
+                    fp      = values[6]
+                    ascrate = values[7]
+
+                    secs = self.calc_secs(minutes, seconds)
+                    if secs not in self.txt_file.standard_pressure_levels:
+                        self.txt_file.standard_pressure_levels[secs] = StandardPressureLevel(press=press, altitude=height, temp=temp, rh=rh, fp=fp, ascrate=ascrate, speed='', direction='')
+                    # FIXME: add to element
+                    #pprint(minutes)
+                    self.next_state = self
+            else:
+                self.reset_states()
+        elif self.headers1_found:
+            s = line.strip()
+            if len(s) > 3 and s[0:3].lower() == 'min':
+                self.reset_states()
+                self.headers2_found = True
+                self.next_state = self
+            else:
+                s = None
+        elif self.title_found:
+            s = line.strip()
+            if len(s) > 3 and s[0:4].lower() == 'time':
+                self.reset_states()
+                self.headers1_found = True
+                self.next_state = self
+            else:
+                s = None
+        else:
+            try:
+                idx = line.index('Standard pressure levels (PTU)') + len('Standard pressure levels (PTU)')
+                if idx >= 0:
+                    self.reset_states()
+                    self.title_found = True
+                    self.white_lines = 0
+                    self.next_state = self
+            except ValueError:
+                s = None
         return s
 
 def parse_txt_file(txt_file):

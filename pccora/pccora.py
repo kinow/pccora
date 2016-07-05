@@ -204,8 +204,8 @@ pccora_data = Struct("pccora_data",
         decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
     ),
     ExprAdapter(SLInt16("mixing_ratio"),
-        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
-        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+        encoder = lambda obj, ctx: obj,
+        decoder = lambda obj, ctx: obj
     ),
     SLInt16("wind_direction"),
     ExprAdapter(SLInt16("wind_speed"),

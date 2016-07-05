@@ -254,7 +254,7 @@ def convert2netcdf4(data, file):
 	# mixing_ratio
 	mixing_ratio_variable = dataset.createVariable('WVMR', 'f4', ("time", ), zlib=True, fill_value=-32768)
 	mixing_ratio_variable.standard_name = 'Water_vapor_mixing_ratio'
-	mixing_ratio_variable.units = 'g/Kg'
+	mixing_ratio_variable.units = '0.1 g/Kg'
 	mixing_ratio_variable.long_name = 'Water Vapor Volume Mixing Ratio'
 	mixing_ratio_variable.g_format_type = 'FLT'
 	mixing_ratio_variable[:] = mixing_ratio

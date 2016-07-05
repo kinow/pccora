@@ -131,14 +131,22 @@ S P Levels    [""" + pformat(self.standard_pressure_levels, indent=4) + """]"""
 
 class SimpleParser(object):
 
-    def __init__(self):
-        self.data = TxtFile()
-        self.current_state = StartedAtState(self.data)
+    def __init__(self, wind_data):
+        self.data = None
+        self.current_state = None
+        self.wind_data = wind_data
 
     def get_data(self):
         return self.data
 
-    def parse(self, line):
+    def parse(self, txt_file):
+        self.data = TxtFile()
+        self.current_state = StartedAtState(self.data)
+        with open(txt_file, 'r') as wf:
+            for line in wf:
+                self.parse_line(line)
+
+    def parse_line(self, line):
         if self.current_state != None and self.current_state.value(line) != None:
             self.current_state = self.current_state.next()
 
@@ -341,7 +349,6 @@ class SignificantLevelsState1(State):
                 s = None
         else:
             try:
-                print(line)
                 idx = line.index('Significant levels: Temperature/Humidity') + len('Significant levels: Temperature/Humidity')
                 if idx >= 0:
                     self.reset_states()
@@ -354,7 +361,6 @@ class SignificantLevelsState1(State):
 
 StandardPressureLevel = namedtuple('StandardPressureLevel', 'press altitude temp rh fp ascrate speed direction')
 
-# FIXME not using !
 class StandardPressureLevelsState1(State):
 
     def __init__(self, txt_file):
@@ -434,15 +440,12 @@ class StandardPressureLevelsState1(State):
                 s = None
         return s
 
-def parse_txt_file(txt_file):
+def parse_txt_file(txt_file, wind_data):
     """
     Parse the Vaisala txt file, returning a mixed dict.
     """
-    parser = SimpleParser()
-    with open(txt_file, 'r') as wf:
-        for line in wf:
-            parser.parse(line)
-
+    parser = SimpleParser(wind_data)
+    parser.parse(txt_file)
     return parser.get_data()
 
 def main():
@@ -450,8 +453,7 @@ def main():
     txt_file = '/home/kinow/Downloads/94032510.txt'
 
     dates = parse_wind_file(wind_file)
-
-    data = parse_txt_file(txt_file)
+    data = parse_txt_file(txt_file, dates)
 
     pprint(data)
     

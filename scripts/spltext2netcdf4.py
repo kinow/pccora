@@ -168,15 +168,22 @@ class SimpleParser(object):
         for date in haystack:
             if abs(date - needle) <= DEFAULT_INTERVAL:
                 wind_data = self.wind_data[date]
-                # Match pressure readings
+                # Match standard pressure readings
                 for press, dic in wind_data['press_readings'].items():
                     if press in self._get_standard_pressure_levels2():
                         standard_pressure_level = self._get_standard_pressure_levels2()[press]
-                        standard_pressure_level.speed = dic['std_wspeed']
-                        standard_pressure_level.direction = dic['std_wdir']
-                pprint(wind_data)
-                pprint(self._get_standard_pressure_levels2())
-                sys.exit(1)
+                        standard_pressure_level.speed = int(dic['std_wspeed'])
+                        standard_pressure_level.direction = int(dic['std_wdir'])
+
+                # FIXME: Match significant level readings
+                # for height, dic in wind_data['height_readings'].items():
+                #     if height in self._get_significant_levels2():
+                #         standard_pressure_level = self._get_significant_levels2()[press]
+                #         standard_pressure_level.speed = int(dic['std_wspeed'])
+                #         standard_pressure_level.direction = int(dic['std_wdir'])
+                # pprint(wind_data)
+                # pprint(self._get_significant_levels2())
+                # sys.exit(1)
 
     def _get_standard_pressure_levels2(self):
         """Return the same dict, but where keys are pressure levels instead of secs. This way we reduce
@@ -185,6 +192,15 @@ class SimpleParser(object):
         for sec, standard_pressure_level in self.data.standard_pressure_levels.items():
             d[standard_pressure_level.press] = standard_pressure_level
         return d
+
+    def _get_significant_levels2(self):
+        """Return the same dict, but where keys are heights levels instead of secs. This way we reduce
+        the number of loops per pressure reading in the wind_data"""
+        d = dict()
+        for sec, significant_level in self.data.significant_levels.items():
+            pass
+            #d[standard_pressure_level.press] = standard_pressure_level
+        return self.data.significant_levels
 
 class State(object):
 

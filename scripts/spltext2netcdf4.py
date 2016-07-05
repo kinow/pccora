@@ -73,8 +73,7 @@ def parse_wind_file(wind_file):
                 if line.count('|') == 4 and line.count('hPa') == 0:
 
                     columns = line.split('|')
-                    std_levels_col = columns[0].replace('/', '').split()
-                    sig_levels_col = columns[1].replace('/', '').split()
+                    std_levels_col = columns[0].replace('/', ' ').split()
 
                     if len(std_levels_col) > 0:
                         hpa = std_levels_col[0]
@@ -88,18 +87,20 @@ def parse_wind_file(wind_file):
                                 dates[d]['readings'][hpa]['std_wdir'] = -32768
                                 dates[d]['readings'][hpa]['std_wspeed'] = -32768
 
-                    # TODO: it is hPa, right?
-                    if len(sig_levels_col) > 0:
-                        hpa = sig_levels_col[0]
-                        if is_int(hpa):
-                            if not hpa in dates[d]['readings']:
-                                dates[d]['readings'][hpa] = dict()
-                            if len(sig_levels_col) == 3:
-                                dates[d]['readings'][hpa]['sig_wdir'] = sig_levels_col[1]
-                                dates[d]['readings'][hpa]['sig_wspeed'] = sig_levels_col[2]
-                            else:
-                                dates[d]['readings'][hpa]['sig_wdir'] = -32768
-                                dates[d]['readings'][hpa]['sig_wspeed'] = -32768
+                    for x in range(1, 4):
+                        # TODO: it is hPa, right?
+                        sig_levels_col = columns[x].replace('/', ' ').split()
+                        if len(sig_levels_col) > 0:
+                            hpa = sig_levels_col[0]
+                            if is_int(hpa):
+                                if not hpa in dates[d]['readings']:
+                                    dates[d]['readings'][hpa] = dict()
+                                if len(sig_levels_col) == 3:
+                                    dates[d]['readings'][hpa]['sig_wdir'] = sig_levels_col[1]
+                                    dates[d]['readings'][hpa]['sig_wspeed'] = sig_levels_col[2]
+                                else:
+                                    dates[d]['readings'][hpa]['sig_wdir'] = -32768
+                                    dates[d]['readings'][hpa]['sig_wspeed'] = -32768
 
                 elif line.strip().startswith('Message Numbers'):
                     in_pilot = False
@@ -163,10 +164,11 @@ class SimpleParser(object):
         haystack = self.wind_data
 
         for date in haystack:
-            pprint(needle)
             if abs(date - needle) <= DEFAULT_INTERVAL:
+                wind_data = self.wind_data[date]
                 print(needle.strftime("%Y/%m/%d %H:%M")) 
                 print(date.strftime("%Y/%m/%d %H:%M")) 
+                pprint(wind_data)
                 print("----") 
 
 class State(object):
@@ -475,12 +477,15 @@ def parse_txt_file(txt_file, wind_data):
     return parser.get_data()
 
 def main():
-    wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService.txt'
+    wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService_simple2.txt'
     txt_file = '/home/kinow/Downloads/99100110.TXT'
 
     logger.info('Parsing WIND file')
     dates = parse_wind_file(wind_file)
     logger.info('Done')
+
+    pprint(dates)
+    return
     logger.info('Parsing TXT file')
     data = parse_txt_file(txt_file, dates)
     logger.info('Done')

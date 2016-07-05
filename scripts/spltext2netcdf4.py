@@ -1,4 +1,5 @@
 
+import sys
 import re
 from pprint import pprint, pformat
 from datetime import datetime, timedelta
@@ -63,7 +64,8 @@ def parse_wind_file(wind_file):
                     'station_id': station_id,
                     'site_name': site_name,
                     'date': date,
-                    'readings': dict()
+                    'press_readings': dict(),
+                    'height_readings': dict()
                 }
 
                 in_pilot = True
@@ -78,32 +80,33 @@ def parse_wind_file(wind_file):
                     if len(std_levels_col) > 0:
                         hpa = std_levels_col[0]
                         if is_int(hpa):
-                            if not hpa in dates[d]['readings']:
-                                dates[d]['readings'][hpa] = dict()
+                            if not hpa in dates[d]['press_readings']:
+                                dates[d]['press_readings'][hpa] = dict()
                             if len(std_levels_col) == 3:
-                                dates[d]['readings'][hpa]['std_wdir'] = std_levels_col[1]
-                                dates[d]['readings'][hpa]['std_wspeed'] = std_levels_col[2]
+                                dates[d]['press_readings'][hpa]['std_wdir'] = std_levels_col[1]
+                                dates[d]['press_readings'][hpa]['std_wspeed'] = std_levels_col[2]
                             else:
-                                dates[d]['readings'][hpa]['std_wdir'] = -32768
-                                dates[d]['readings'][hpa]['std_wspeed'] = -32768
+                                dates[d]['press_readings'][hpa]['std_wdir'] = -32768
+                                dates[d]['press_readings'][hpa]['std_wspeed'] = -32768
 
                     for x in range(1, 4):
-                        # TODO: it is hPa, right?
                         sig_levels_col = columns[x].replace('/', ' ').split()
                         if len(sig_levels_col) > 0:
-                            hpa = sig_levels_col[0]
-                            if is_int(hpa):
-                                if not hpa in dates[d]['readings']:
-                                    dates[d]['readings'][hpa] = dict()
+                            height = sig_levels_col[0]
+                            if is_int(height):
+                                if not height in dates[d]['height_readings']:
+                                    dates[d]['height_readings'][height] = dict()
                                 if len(sig_levels_col) == 3:
-                                    dates[d]['readings'][hpa]['sig_wdir'] = sig_levels_col[1]
-                                    dates[d]['readings'][hpa]['sig_wspeed'] = sig_levels_col[2]
+                                    dates[d]['height_readings'][height]['sig_wdir'] = sig_levels_col[1]
+                                    dates[d]['height_readings'][height]['sig_wspeed'] = sig_levels_col[2]
                                 else:
-                                    dates[d]['readings'][hpa]['sig_wdir'] = -32768
-                                    dates[d]['readings'][hpa]['sig_wspeed'] = -32768
+                                    dates[d]['height_readings'][height]['sig_wdir'] = -32768
+                                    dates[d]['height_readings'][height]['sig_wspeed'] = -32768
 
                 elif line.strip().startswith('Message Numbers'):
                     in_pilot = False
+        pprint(dates)
+        sys.exit(1)
         return dates
 
 # Had to implement a bit-more-complex state machine or multiple regex'es would be just too slow
@@ -166,8 +169,6 @@ class SimpleParser(object):
         for date in haystack:
             if abs(date - needle) <= DEFAULT_INTERVAL:
                 wind_data = self.wind_data[date]
-                print(needle.strftime("%Y/%m/%d %H:%M")) 
-                print(date.strftime("%Y/%m/%d %H:%M")) 
                 pprint(wind_data)
                 print("----") 
 
@@ -484,8 +485,6 @@ def main():
     dates = parse_wind_file(wind_file)
     logger.info('Done')
 
-    pprint(dates)
-    return
     logger.info('Parsing TXT file')
     data = parse_txt_file(txt_file, dates)
     logger.info('Done')

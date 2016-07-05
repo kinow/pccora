@@ -158,13 +158,12 @@ class SimpleParser(object):
 
     def tally(self):
         """Tally results, by matching an entry in the wind data and getting wspeed and wdir"""
+
         needle = self.data.started_at
         haystack = self.wind_data
 
         for date in haystack:
-            print(needle.strftime("%Y/%m/%d %H:%M")) 
-            print(date.strftime("%Y/%m/%d %H:%M")) 
-            print("----") 
+            pprint(needle)
             if abs(date - needle) <= DEFAULT_INTERVAL:
                 print(needle.strftime("%Y/%m/%d %H:%M")) 
                 print(date.strftime("%Y/%m/%d %H:%M")) 
@@ -203,7 +202,10 @@ class StartedAtState(State):
                 idx2 = s.index(':')
                 if idx2 > 0:
                     s = s[0:idx2+3]
-                    self.txt_file.started_at = datetime.strptime(s, "%d %B %y %H:%M")
+                    try:
+                        self.txt_file.started_at = datetime.strptime(s, "%d %B %y %H:%M")
+                    except ValueError:
+                        self.txt_file.started_at = datetime.strptime(s, "%d %B %Y %H:%M")
         except ValueError:
             pass
         return s
@@ -474,7 +476,7 @@ def parse_txt_file(txt_file, wind_data):
 
 def main():
     wind_file = '/home/kinow/Downloads/Inv_upper_air_wind_MetService.txt'
-    txt_file = '/home/kinow/Downloads/94032510.txt'
+    txt_file = '/home/kinow/Downloads/99100110.TXT'
 
     logger.info('Parsing WIND file')
     dates = parse_wind_file(wind_file)

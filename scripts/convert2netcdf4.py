@@ -39,9 +39,6 @@ def parseandconvert_add_day(input, output):
 
 	output = output.replace('DD', str(ident['day']))
 
-	print(output)
-	sys.exit(1)
-
 	# Call function to print CSV
 	convert2netcdf4(
 		data=dict(head=head, ident=ident, data=data, hires_data=hires_data), 

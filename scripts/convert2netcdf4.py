@@ -190,10 +190,10 @@ def convert2netcdf4(data, file):
 		radar_height.append(container['radar_height'])
 
 	# elapsed_time
-	elapsed_time_variable = dataset.createVariable('elapsed_time', 'f4', ("time", ), zlib=True, fill_value=-32768)
-	elapsed_time_variable.standard_name = 'elapsed_time'
+	elapsed_time_variable = dataset.createVariable('time', 'f4', ("time", ), zlib=True, fill_value=-32768)
+	elapsed_time_variable.standard_name = 'time'
 	elapsed_time_variable.units = 's'
-	elapsed_time_variable.long_name = 'Elapsed time since sonde release'
+	elapsed_time_variable.long_name = 'Seconds since sonde release'
 	elapsed_time_variable.g_format_type = 'FLT'
 	elapsed_time_variable[:] = elapsed_time
 

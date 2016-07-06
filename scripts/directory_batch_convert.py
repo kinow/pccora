@@ -6,7 +6,7 @@ from pathlib import Path
 import logging
 import argparse
 
-from convert2netcdf4 import parseandconvert
+from convert2netcdf4 import parseandconvert_add_day
 
 parser = argparse.ArgumentParser(description='Recursively batch convert Vaisala old-binary format to NetCDF files. Keeps directory structure.')
 parser.add_argument('--from', dest='fromdir', help='Input directory', required=True)
@@ -53,9 +53,22 @@ def process():
 
                 diff = input_path.relative_to(from_dir)
                 output_path = to_dir.joinpath(diff)
-                extension = output_path.suffix
+                #extension = output_path.suffix
                 output_file = output_path.as_posix()
-                output_file = output_file.replace(extension, '.nc')
+                #output_file = output_file.replace(extension, '.nc')
+
+                ye = output_path.name[0:2]
+                mo = output_path.name[2:4]
+                da = 'DD'
+                ho = output_path.name[4:6]
+                mi = output_path.name[6:8]
+
+                if int(ye) < 20:
+                    ye = '20' + ye
+                else:
+                    ye = '19' + ye
+
+                output_file = output_file.replace(output_path.name, 'Invercargill_RS_%s%s%sT%s%s00.nc' % (ye, mo, da, ho, mi))
 
                 if not output_path.parent.exists():
                     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -73,7 +86,7 @@ def process():
 
                 #print(output_file)
                 try:
-                    parseandconvert(input_file, output_file)
+                    parseandconvert_add_day(input_file, output_file)
                     total_success = total_success + 1
                     logger.info("Successfully parsed [%s]" % output_file)
                 except KeyboardInterrupt:

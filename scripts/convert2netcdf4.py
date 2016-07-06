@@ -26,6 +26,27 @@ def parseandconvert(input, output):
 		data=dict(head=head, ident=ident, data=data, hires_data=hires_data), 
 		file=output)
 
+def parseandconvert_add_day(input, output):
+	pccora_parser = PCCORAParser()
+	pccora_parser.parse_file(input)
+
+	# Data
+	head = pccora_parser.get_header()
+	ident = pccora_parser.get_identification()
+	#syspar = pccora_parser.get_syspar()
+	data = pccora_parser.get_data()
+	hires_data = pccora_parser.get_hires_data()
+
+	output = output.replace('DD', str(ident['day']))
+
+	print(output)
+	sys.exit(1)
+
+	# Call function to print CSV
+	convert2netcdf4(
+		data=dict(head=head, ident=ident, data=data, hires_data=hires_data), 
+		file=output)
+
 def convert2netcdf4(data, file):
 	"""Convert a file in the Vaisala old binary format, into a netCDF file,
 	creating a file following the GRUAN data format standard.

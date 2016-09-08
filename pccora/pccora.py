@@ -293,12 +293,42 @@ pccora_hires_data = Struct("pccora_hires_data",
     Value('spress', lambda ctx: math.exp(ctx['logarithmic_pressure']/4096.0))
 )
 
+pccora_s_hires_data = Struct("pccora_hires_data",
+    SLInt16("time"),
+    SLInt16("logarithmic_pressure"),
+    ExprAdapter(SLInt16("temperature"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
+    SLInt16("humidity"),
+    SLInt16("n_data"),
+    SLInt16("c1"),
+    SLInt16("c2"),
+    SLInt16("c3"),
+    SLInt16("c4"),
+    SLInt16("c5"),
+    SLInt16("c6"),
+    SLInt16("c7"),
+    SLInt16("c8"),
+    SLInt16("cycles"),
+    SLInt16("not_used"),
+    Bytes("buffer", 20)
+)
+
 pccora_file = Struct("pccora_file",
     pccora_header,
     pccora_identification,
     pccora_syspar,
     Range(mincount=1, maxcout=25, subcon=pccora_data),
     OptionalGreedyRange(pccora_hires_data)
+)
+
+# S file. The raw version of the Z file.
+pccora_s_file = Struct("pccora_s_hires_data",
+    pccora_header,
+    pccora_identification,
+    pccora_syspar,
+    OptionalGreedyRange(pccora_s_hires_data)
 )
 
 class PCCORAParser(object):
@@ -337,6 +367,13 @@ class PCCORAParser(object):
         """
         with open(file_arg, 'rb') as fid:
             self.result = pccora_file.parse_stream(fid)
+
+    def parse_s_file(self, file_arg):
+        """
+        Parse an S file, by opening it with 'rb' flags and sending it through the construct binary parser.
+        """
+        with open(file_arg, 'rb') as fid:
+            self.result = pccora_s_file.parse_stream(fid)
 
     def parse_stream(self, stream_arg):
         """

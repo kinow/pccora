@@ -315,6 +315,28 @@ pccora_s_hires_data = Struct("pccora_hires_data",
     Bytes("buffer", 20)
 )
 
+pccora_z_hires_data = Struct("pccora_hires_data",
+    SLInt16("time"),
+    SLInt16("logarithmic_pressure"),
+    ExprAdapter(SLInt16("temperature"),
+        encoder = lambda obj, ctx: int(obj / 0.1) if obj != -32768 else obj,
+        decoder = lambda obj, ctx: float(obj) * 0.1 if obj != -32768 else obj
+    ),
+    SLInt16("humidity"),
+    SLInt16("n_data"),
+    SLInt16("c1"),
+    SLInt16("c2"),
+    SLInt16("c3"),
+    SLInt16("c4"),
+    SLInt16("c5"),
+    SLInt16("c6"),
+    SLInt16("c7"),
+    SLInt16("c8"),
+    SLInt16("cycles"),
+    SLInt16("not_used"),
+    Bytes("buffer", 20)
+)
+
 pccora_file = Struct("pccora_file",
     pccora_header,
     pccora_identification,
@@ -329,6 +351,14 @@ pccora_s_file = Struct("pccora_s_hires_data",
     pccora_identification,
     pccora_syspar,
     OptionalGreedyRange(pccora_s_hires_data)
+)
+
+# Z file.
+pccora_s_file = Struct("pccora_z_hires_data",
+    pccora_header,
+    pccora_identification,
+    pccora_syspar,
+    OptionalGreedyRange(pccora_z_hires_data)
 )
 
 class PCCORAParser(object):

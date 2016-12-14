@@ -8,7 +8,7 @@ def pccora_test_suite():
     test_suite = test_loader.discover('tests', pattern='test_*.py')
     return test_suite
 
-test_requirements = ['construct']
+test_requirements = []
 
 setup(name='pccora',
       version='0.1',

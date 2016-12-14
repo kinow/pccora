@@ -1,6 +1,13 @@
 PCCORA
 ======
 
+.. image:: https://travis-ci.org/kinow/pccora.svg?branch=master
+:target: https://travis-ci.org/kinow/pccora
+
+.. image:: https://coveralls.io/repos/github/kinow/pccora/badge.svg?branch=master
+:target: https://coveralls.io/github/kinow/pccora?branch=master
+
+
 PC-CORA parser for Python. Supports the format described here `https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html` (accessed at 2015-12-05).
 
 This format is used for `radiosonde data https://badc.nerc.ac.uk/data/ukmo-rad-hires/`. According to Wikipedia,

@@ -1,0 +1,7 @@
+install:
+ - pip install coveralls
+
+script: coverage run --source pccora setup.py test
+
+after_success:
+    coveralls

@@ -23,5 +23,5 @@ setup(name='pccora',
       tests_require = test_requirements,
       test_suite='setup.pccora_test_suite',
       install_requires = [
-        'construct'
+        'construct==2.5'
       ] + test_requirements)

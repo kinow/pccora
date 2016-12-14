@@ -8,6 +8,8 @@ def pccora_test_suite():
     test_suite = test_loader.discover('tests', pattern='test_*.py')
     return test_suite
 
+test_requirements = ['construct']
+
 setup(name='pccora',
       version='0.1',
       description='PC-CORA sounding data files parser for Python',
@@ -18,4 +20,8 @@ setup(name='pccora',
       keywords = ['sounding file', 'radiosonde', 'vaisala', 'pccora'],
       packages=['pccora'],
       zip_safe=False,
-      test_suite='setup.pccora_test_suite')
+      tests_require = test_requirements,
+      test_suite='setup.pccora_test_suite',
+      install_requires = [
+        'construct'
+      ] + test_requirements)

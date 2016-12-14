@@ -1,3 +1,10 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+  - "3.2"
+  - "3.5"
+
 install:
  - pip install coveralls
 
@@ -5,3 +12,6 @@ script: coverage run --source pccora setup.py test
 
 after_success:
     coveralls
+
+sudo:
+  - true

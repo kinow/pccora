@@ -11,7 +11,7 @@ def pccora_test_suite():
 test_requirements = []
 
 setup(name='pccora',
-      version='0.1',
+      version='0.2',
       description='PC-CORA sounding data files parser for Python',
       url='http://github.com/niwa/pccora',
       author='Bruno P. Kinoshita',
@@ -23,5 +23,5 @@ setup(name='pccora',
       tests_require = test_requirements,
       test_suite='setup.pccora_test_suite',
       install_requires = [
-        'construct==2.5'
+        'construct==2.5.1'
       ] + test_requirements)

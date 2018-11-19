@@ -158,7 +158,7 @@ class SimpleParser(object):
                 self._tally()
 
     def parse_line(self, line):
-        if self.current_state != None and self.current_state.value(line) != None:
+        if self.current_state is not None and self.current_state.value(line) is not None:
             self.current_state = self.current_state.next()
 
     def _tally(self):

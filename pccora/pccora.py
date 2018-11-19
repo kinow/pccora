@@ -354,7 +354,7 @@ pccora_s_file = Struct("pccora_s_hires_data",
 )
 
 # Z file.
-pccora_s_file = Struct("pccora_z_hires_data",
+pccora_z_file = Struct("pccora_z_hires_data",
     pccora_header,
     pccora_identification,
     pccora_syspar,
@@ -404,6 +404,13 @@ class PCCORAParser(object):
         """
         with open(file_arg, 'rb') as fid:
             self.result = pccora_s_file.parse_stream(fid)
+
+    def parse_z_file(self, file_arg):
+        """
+        Parse a Z file, by opening it with 'rb' flags and sending it through the construct binary parser.
+        """
+        with open(file_arg, 'rb') as fid:
+            self.result = pccora_z_file.parse_stream(fid)
 
     def parse_stream(self, stream_arg):
         """

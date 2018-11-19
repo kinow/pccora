@@ -28,6 +28,7 @@ def main():
 
     pccora_parser = PCCORAParser()
     pccora_parser.parse_s_file(file)
+    # pccora_parser.parse_z_file(file)
     
     # head = pccora_parser.get_header()
     ident = pccora_parser.get_identification()

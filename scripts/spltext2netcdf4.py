@@ -210,6 +210,7 @@ class State(object):
         self.next_state = None
         self.txt_file = txt_file
 
+    # noinspection PyMethodMayBeStatic
     def calc_secs(self, mins, secs):
         return secs + (mins * 60)
 

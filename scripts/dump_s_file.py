@@ -12,7 +12,7 @@ def dump_values(obj):
 def dump_array_values(obj, elapsed_time):
     i = 0
     for container in obj:
-        if i >= 2999 and i <= 3019:
+        if 2999 <= i <= 3019:
             ti = container['time']
             p = math.exp(float(container['logarithmic_pressure'])/float(4096))
             t = float(container['temperature'])

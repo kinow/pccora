@@ -112,7 +112,7 @@ def parse_wind_file(wind_file):
 class TxtFile(object):
 
     def __init__(self):
-        self.started_at = ''
+        self.started_at = None  # type: datetime.date
         self.station = 0
         self.longitude = 0.0
         self.latitude = 0.0

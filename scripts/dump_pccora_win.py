@@ -26,7 +26,7 @@ def dump_values_np_dict(obj, print_item_index=True):
     #	age: [33, 25]
     # }
     # where you can view that john has 33 years, and stephen 25
-    length = i = 0
+    length = n = 0
 
     # we have to iterate twice, as sometimes a datetime object can appear first...
     for key in obj:
@@ -44,9 +44,9 @@ def dump_values_np_dict(obj, print_item_index=True):
             else:
                 value = obj[key][i]
             print("%s -> %s" % (key, value))
-        i += 1
+        n += 1
 
-        if i >= length:
+        if n >= length:
             break
 
 

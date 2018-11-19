@@ -185,7 +185,7 @@ def convert2netcdf4(data, file):
 		sigkey = sigkey.replace('0b', '')
 		significance_key.append(sigkey)
 		rsigkey = ''.join(container['recalculated_significance_key'])
-		rsigkey = sigkey.replace('0b', '')
+		rsigkey = rsigkey.replace('0b', '')
 		recalculated_significance_key.append(rsigkey)
 		radar_height.append(container['radar_height'])
 

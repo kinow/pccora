@@ -1,6 +1,5 @@
 import unittest
 
-from construct import *
 import pccora
 
 

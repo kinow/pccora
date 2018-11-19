@@ -13,18 +13,31 @@ def pccora_test_suite():
 
 test_requirements = []
 
+install_requires = [
+    'construct==2.5.1'
+]
+
+extras_require = {
+    'scripts': [
+        'numpy',
+        'netcdf4'
+    ]
+}
+
 setup(name='pccora',
-      version='0.2',
+      version='0.3',
       description='PC-CORA sounding data files parser for Python',
       url='http://github.com/niwa/pccora',
       author='Bruno P. Kinoshita',
       author_email='brunodepaulak@yahoo.com.br',
       license='MIT',
-      keywords=['sounding file', 'radiosonde', 'vaisala', 'pccora'],
+      keywords=['sounding file', 'radiosonde', 'vaisala', 'pccora', 'atmosphere'],
       packages=['pccora'],
       zip_safe=False,
       tests_require=test_requirements,
       test_suite='setup.pccora_test_suite',
       install_requires=[
                            'construct==2.5.1'
-                       ] + test_requirements)
+                       ] + test_requirements,
+      extras_require=extras_require
+      )

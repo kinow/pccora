@@ -14,7 +14,6 @@ Hands-on example:
 """
 
 from .pccora import PCCORAParser
-from .version import version, version_string as __version__
 
 # ===============================================================================
 # Metadata

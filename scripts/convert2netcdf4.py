@@ -2,13 +2,9 @@
 # Requires: numpy, netCDF4
 # @see https://www.mi.uni-hamburg.de/en/arbeitsgruppen/strahlung-und-fernerkundung/intern/datadocs/gruan.html
 
-import os
-import sys
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'pccora'))
-from pccora import *
-
 from netCDF4 import Dataset
+
+from pccora import *
 
 
 def parseandconvert(in_file, output):

@@ -10,9 +10,9 @@ from construct import *
 from netCDF4 import Dataset
 import numpy as np
 
-def parseandconvert(input, output):
+def parseandconvert(in_file, output):
 	pccora_parser = PCCORAParser()
-	pccora_parser.parse_file(input)
+	pccora_parser.parse_file(in_file)
 
 	# Data
 	head = pccora_parser.get_header()
@@ -26,9 +26,9 @@ def parseandconvert(input, output):
 		data=dict(head=head, ident=ident, data=data, hires_data=hires_data), 
 		file=output)
 
-def parseandconvert_add_day(input, output):
+def parseandconvert_add_day(in_file, output):
 	pccora_parser = PCCORAParser()
-	pccora_parser.parse_file(input)
+	pccora_parser.parse_file(in_file)
 
 	# Data
 	head = pccora_parser.get_header()

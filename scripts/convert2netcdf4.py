@@ -52,7 +52,7 @@ def convert2netcdf4(data, file):
 	data -- the data dictionary from a parsed radiosonde data file
 	file -- the dataset output file
 	"""
-	head = data['head']
+	# head = data['head']
 	ident = data['ident']
 
 	#data_data = data['data']

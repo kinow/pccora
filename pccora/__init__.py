@@ -13,8 +13,8 @@ Hands-on example:
     >>> print(pccora_parser.get_data())
 """
 
-from pccora.pccora import PCCORAParser
-from pccora.version import version, version_string as __version__
+from . pccora import PCCORAParser
+from . version import version, version_string as __version__
 
 #===============================================================================
 # Metadata

@@ -195,15 +195,15 @@ def main(file='/users/noel/Projects/blue5/rs/2008/07/radiosonde_rothera_20080701
 
     print('## DATA')
 
-    for i in np.r_[0:25]:
-        print(i)
-        print('Elapsed time since release [s]:', data['time'][i])
-        print('Time: ', data['datetime'][i])
-        print('Scaled P and P [hPa]:', data['spress'][i], data['press'][i])
-        print('Temperature [K, C]: ', data['temp'][i], data['temp'][i] - 273)
-        print('Wind direction[deg]: ', data['winddir'][i])
-        print('Wind speed[m/s]: ', data['windspeed'][i])
-        print('Coords: ', data['long'][i], data['lat'][i])
+    for n in np.r_[0:25]:
+        print(n)
+        print('Elapsed time since release [s]:', data['time'][n])
+        print('Time: ', data['datetime'][n])
+        print('Scaled P and P [hPa]:', data['spress'][n], data['press'][n])
+        print('Temperature [K, C]: ', data['temp'][n], data['temp'][n] - 273)
+        print('Wind direction[deg]: ', data['winddir'][n])
+        print('Wind speed[m/s]: ', data['windspeed'][n])
+        print('Coords: ', data['long'][n], data['lat'][n])
 
 
 if __name__ == '__main__':

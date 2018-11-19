@@ -44,7 +44,7 @@ def dump_values_np_dict(obj, print_item_index=True):
             else:
                 value = obj[key][i]
             print("%s -> %s" % (key, value))
-        i = i + 1
+        i += 1
 
         if i >= length:
             break

@@ -5,12 +5,10 @@ Outputs the same as MetGraph.
 """
 
 import os
-import sys
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'pccora'))
-from pccora import *
 
 from jinja2 import Environment
+
+from pccora import *
 
 
 def print_template(file, ident, hires_data):

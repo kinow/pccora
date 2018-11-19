@@ -1,13 +1,10 @@
 
-import sys
 import re
-from pprint import pprint, pformat
+from pprint import pformat
 from datetime import datetime, timedelta
 import pytz
 import logging
-from collections import namedtuple
 from netCDF4 import Dataset
-import numpy as np
 
 FORMAT = '%(asctime)s %(message)s'
 logger = logging.getLogger()

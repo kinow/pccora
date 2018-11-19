@@ -1,7 +1,8 @@
 import math
 from datetime import datetime, timedelta
 
-from construct import *
+from construct import Struct, ExprAdapter, String, SLInt16, SLInt32, Enum, Byte, Bytes, Value, LFloat32, Range, \
+    OptionalGreedyRange
 
 # ===============================================================================
 # Construct parser objects
@@ -397,9 +398,6 @@ class PCCORAParser(object):
 
     def __init__(self):
         self.result = None
-
-    def __repr__(self):
-        return "%s(%r)" % (self.__class__.__name__, self.name)
 
     def parse_file(self, file_arg):
         """

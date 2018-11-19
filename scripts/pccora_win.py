@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-'''
+"""
 Module to read Radiosonde measurement files in the PCCORA proprietary binary format.
 See http://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html
 
@@ -11,7 +11,7 @@ VNoel 2012
 Contributions by Richard Querel 
 
 dependencies: numpy, plac to run the module standalone (easy to remove)
-'''
+"""
 
 import os
 import numpy as np

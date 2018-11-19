@@ -407,7 +407,7 @@ class PCCORAParser(object):
 
     def parse_stream(self, stream_arg):
         """
-        Parse a file, by passing the stream argument thourhg the construct binary parser.
+        Parse a file, by passing the stream argument through the construct binary parser.
         """
         self.result = pccora_file.parse_stream(stream_arg)
 

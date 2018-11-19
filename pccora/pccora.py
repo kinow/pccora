@@ -168,7 +168,7 @@ pccora_identification = Struct("pccora_identification",
     ),
     SLInt16("reference_humidity"),
     Value("datetime", lambda ctx: None if ctx['year'] == 0 or ctx['month'] == 0 or ctx['day'] == 0 else datetime(ctx['year'], ctx['month'], ctx['day'], ctx['hour'], ctx['minute'])),
-    Value("launch_time", lambda ctx: None if ctx['datetime'] == None else ctx['datetime'] + timedelta(seconds=ctx['time_elapsed']))
+    Value("launch_time", lambda ctx: None if ctx['datetime'] is None else ctx['datetime'] + timedelta(seconds=ctx['time_elapsed']))
 )
 
 pccora_syspar = Struct("pccora_syspar",

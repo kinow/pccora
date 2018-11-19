@@ -39,7 +39,7 @@ def process():
 
     total_files = 0
     total_success = 0
-    total_error = 0
+    # total_error = 0
     failed_to_process = []
     skipped_files = []
 

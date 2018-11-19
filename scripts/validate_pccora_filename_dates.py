@@ -35,7 +35,7 @@ def main():
 
 		pccora_parser = PCCORAParser()
 		pccora_parser.parse_file(filename)
-		head = pccora_parser.get_header()
+		# head = pccora_parser.get_header()
 		ident = pccora_parser.get_identification()
 
 		date_within_file = ''.join([

@@ -50,12 +50,9 @@ def print_template(file, ident, hires_data):
 
 		entries = list()
 
-		minute = 0
-		second = 0
 		for container in hires_data:
 			time = container['time']
 
-			
 			minute=(int(time/60.0))
 			second=(int(time % 60))
 			pressure = round(float(container['spress']), 1)
@@ -110,10 +107,10 @@ def main():
 
 	pccora_parser = PCCORAParser()
 	pccora_parser.parse_file(file)
-	head = pccora_parser.get_header()
+	#head = pccora_parser.get_header()
 	ident = pccora_parser.get_identification()
-	syspar = pccora_parser.get_syspar()
-	data = pccora_parser.get_data()
+	#syspar = pccora_parser.get_syspar()
+	#data = pccora_parser.get_data()
 	hires_data = pccora_parser.get_hires_data()
 
 	print_template(file, ident, hires_data)

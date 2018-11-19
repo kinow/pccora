@@ -29,12 +29,12 @@ def main():
     pccora_parser = PCCORAParser()
     pccora_parser.parse_s_file(file)
     
-    head = pccora_parser.get_header()
+    # head = pccora_parser.get_header()
     ident = pccora_parser.get_identification()
 
     elapsed_time = ident['time_elapsed']
 
-    syspar = pccora_parser.get_syspar()
+    # syspar = pccora_parser.get_syspar()
     hires_data = pccora_parser.get_hires_data()
     dump_array_values(hires_data, elapsed_time)
     print("\n")

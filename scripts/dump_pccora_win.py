@@ -5,7 +5,7 @@ from pccora_win import *
 
 def dump_values_np(obj):
 	for name in obj.dtype.names:
-		dtype = obj.dtype[name]
+		# dtype = obj.dtype[name]
 		value = obj[name][0]
 		print("%s -> %s" % (name, value))
 

@@ -198,10 +198,10 @@ class SimpleParser(object):
     def _get_significant_levels2(self):
         """Return the same dict, but where keys are heights levels instead of secs. This way we reduce
         the number of loops per pressure reading in the wind_data"""
-        d = dict()
-        for sec, significant_level in self.data.significant_levels.items():
-            pass
-            #d[standard_pressure_level.press] = standard_pressure_level
+        #d = dict()
+        #for sec, significant_level in self.data.significant_levels.items():
+        #    pass
+        #    d[standard_pressure_level.press] = standard_pressure_level
         return self.data.significant_levels
 
 class State(object):

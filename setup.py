@@ -18,9 +18,14 @@ install_requires = [
 ]
 
 extras_require = {
-    'scripts': [
+    'scripts_linux': [
+        'jinja2',
+        'netcdf4',
         'numpy',
-        'netcdf4'
+        'pytz'
+    ],
+    'scripts_win32': [
+        'plac'
     ]
 }
 
@@ -34,10 +39,8 @@ setup(name='pccora',
       keywords=['sounding file', 'radiosonde', 'vaisala', 'pccora', 'atmosphere'],
       packages=['pccora'],
       zip_safe=False,
-      tests_require=test_requirements,
       test_suite='setup.pccora_test_suite',
-      install_requires=[
-                           'construct==2.5.1'
-                       ] + test_requirements,
+      tests_require=test_requirements,
+      install_requires=install_requires,
       extras_require=extras_require
       )

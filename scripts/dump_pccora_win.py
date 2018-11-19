@@ -28,7 +28,7 @@ def dump_values_np_dict(obj, print_item_index=True):
 
 	# we have to iterate twice, as sometimes a datetime object can appear first...
 	for key in obj:
-		if False == isinstance(obj[key], datetime):
+		if not isinstance(obj[key], datetime):
 			if length == 0:
 				length = len(obj[key])
 

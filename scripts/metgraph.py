@@ -100,7 +100,7 @@ def print_template(file, ident, hires_data):
 			special1=ident['weather_group'].decode().strip(),
 			special2=ident['napp'].decode().strip(),
 			success_of_signal=ident['success_of_signal'],
-			reason_temination=ident['reason_temination'],
+			reason_termination=ident['reason_termination'],
 			entries=entries
 		)
 		print(s)

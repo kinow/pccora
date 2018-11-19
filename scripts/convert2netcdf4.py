@@ -113,7 +113,7 @@ def convert2netcdf4(data, file):
 	dataset.humidity_replace_level = ident['humidity_replace_level']
 	dataset.humidity_reject_level = ident['humidity_reject_level']
 	dataset.total_omega_count = ident['total_omega_count']
-	dataset.reason_temination = ident['reason_temination']
+	dataset.reason_termination = ident['reason_termination']
 	dataset.omega_count = ident['omega_count']
 	dataset.wind_computing_mode = str(ident['wind_computing_mode']) + ', comment: 0 = Remote 1 = Local 2 = Differential'
 	dataset.wind_mode = str(ident['wind_mode']) + ', comment: 0 = Omega 1 = Loran-C 2 = Radar 255 = Only PTU'

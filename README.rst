@@ -11,18 +11,27 @@ PCCORA
    :target: https://coveralls.io/github/kinow/pccora?branch=master
 
 
-PC-CORA parser for Python. Supports the format described here `https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html` (accessed at 2015-12-05).
+PC-CORA parser for Python. Supports the format described at `<https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html>`_ (accessed at 2015-12-05).
 
-This format is used for `radiosonde data https://badc.nerc.ac.uk/data/ukmo-rad-hires/`. According to Wikipedia,
+This format is used for `radiosonde data <https://badc.nerc.ac.uk/data/ukmo-rad-hires/>`_.
 
-"A radiosonde (Sonde is French and German for probe) is a battery-powered telemetry instrument package carried into the atmosphere usually by a weather balloon that measures various atmospheric parameters and transmits them by radio to a ground receiver."
+    A radiosonde (Sonde is French and German for probe) is a battery-powered telemetry instrument package carried into the atmosphere usually by a weather balloon that measures various atmospheric parameters and transmits them by radio to a ground receiver. (Wikipedia)
 
-This format is produced by old `Vaisala http://www.vaisala.com` equipments. Newer data is probably available in the NetCDF.
+This format is produced by old `Vaisala <http://www.vaisala.com>`_ equipments. Newer data is probably available in the NetCDF.
 
 History
 -------
 
-I was asked by a co-worker to look at some Python code with a PC-CORA parser. However, he also needed some further work on finding these files and outputting the contents as CSV. Decided to write a module for PC-CORA inspired by the original script [1], using Python3, OO and packing as a Python package to be distributed to the `PYPI https://pypi.python.org/pypi`.
+I was asked by a co-worker to look at some Python code with a PC-CORA parser.
+This co-worker also needed further analysis and processing, involving some
+data being created as CSV, netCDF, or plotted.
+
+I decided to write a module for PC-CORA inspired by the original script [1],
+but using Python3, OO, and packaging as a Python package to be distributed
+to the `PYPI <https://pypi.org/project/pccora/>`_.
+
+This way we could use it in scripts, or other internal applications. And it
+would also be easier for others to find it and re-use.
 
 [1] https://github.com/vnoel/pycode/blob/master/pccora.py
 
@@ -39,23 +48,34 @@ Example
 Obtaining Data
 --------------
 
-There are datasets available at the `CEDA website http://catalogue.ceda.ac.uk/` (Centre for Environmental Data Archival), however, access is restricted.
+There are datasets available at the `CEDA website
+<http://catalogue.ceda.ac.uk/>`_ (Centre for Environmental Data Archival),
+however, access is restricted.
 
-`NOAA's ESRL http://www.esrl.noaa.gov` (Earth System Research Laboratory) has an FTP server with some data in the the old PC-CORA sounding data format. Just search for FTP for instructions on how to access the Physical Sciences Division FTP server. Some valid files can be found at `/psd3/cruises/AERO_1999/RHB/balloon/Raw` (checked on 2016-01-17).
+`NOAA's ESRL <http://www.esrl.noaa.gov>`_ (Earth System Research Laboratory)
+has an FTP server with some data in the the old PC-CORA sounding data format.
+Just search for FTP for instructions on how to access the Physical Sciences
+Division FTP server. Some valid files can be found at
+`/psd3/cruises/AERO_1999/RHB/balloon/Raw` (accessed 2016-01-17).
 
 Requirements
 ------------
 
-Python 2 or Python 3, and the `construct library https://github.com/construct/construct`.
+Python 3.6 or superior, and the `construct library
+<https://github.com/construct/construct>`_ are the minimum requirements.
 
 Installation
 ------------
 
     pip install pccora
 
-Or, to use the bleeding edge version, git clone this repository, and have a look at the scripts folders for an example how to use the module from within a local folder. You may have to uninstall the pip module first.
+Or, to use the bleeding edge version, git clone this repository, and have a
+look at the scripts folders for an example how to use the module from
+within a local folder. You may have to uninstall the pip module first.
 
-The PYPI URL is https://pypi.python.org/pypi/pccora.
+    python setup.py install
+
+The PYPI URL is `<https://pypi.python.org/pypi/pccora>`_.
 
 License
 -------

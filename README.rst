@@ -2,13 +2,13 @@ PCCORA
 ======
 
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1163385.svg
-:target: https://doi.org/10.5281/zenodo.1163385
+   :target: https://doi.org/10.5281/zenodo.1163385
 
 .. image:: https://travis-ci.org/kinow/pccora.svg?branch=master
-:target: https://travis-ci.org/kinow/pccora
+   :target: https://travis-ci.org/kinow/pccora
 
 .. image:: https://coveralls.io/repos/github/kinow/pccora/badge.svg?branch=master
-:target: https://coveralls.io/github/kinow/pccora?branch=master
+   :target: https://coveralls.io/github/kinow/pccora?branch=master
 
 
 PC-CORA parser for Python. Supports the format described here `https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html` (accessed at 2015-12-05).

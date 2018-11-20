@@ -29,18 +29,18 @@ extras_require = {
     ]
 }
 
-setup(name='pccora',
-      version='0.3',
-      description='PC-CORA sounding data files parser for Python',
-      url='http://github.com/niwa/pccora',
-      author='Bruno P. Kinoshita',
-      author_email='brunodepaulak@yahoo.com.br',
-      license='MIT',
-      keywords=['sounding file', 'radiosonde', 'vaisala', 'pccora', 'atmosphere'],
-      packages=['pccora'],
-      zip_safe=False,
-      test_suite='setup.pccora_test_suite',
-      tests_require=test_requirements,
-      install_requires=install_requires,
-      extras_require=extras_require
-      )
+setup(
+    name='pccora',
+    version='0.3',
+    description='PC-CORA sounding data files parser for Python',
+    url='http://github.com/niwa/pccora',
+    author='Bruno P. Kinoshita',
+    author_email='brunodepaulak@yahoo.com.br',
+    license='MIT',
+    keywords=['sounding file', 'radiosonde', 'vaisala', 'pccora', 'atmosphere'],
+    packages=['pccora'],
+    zip_safe=False,
+    tests_require=test_requirements,
+    install_requires=install_requires,
+    extras_require=extras_require
+)

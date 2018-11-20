@@ -124,13 +124,13 @@ def create_data_datetimes(launchtime, seconds):
 
 
 def pccora_read(file):
-    ## HEADER
+    # HEADER
 
     fid = open(file, 'rb')
 
     head = np.fromfile(fid, dtype=pccoraheader, count=1)
 
-    ## DATA IDENTIFIER
+    # DATA IDENTIFIER
 
     ident = np.fromfile(fid, dtype=pccoraident, count=1)
     ident = convert_object_to_dict(ident, pccoraident.names)

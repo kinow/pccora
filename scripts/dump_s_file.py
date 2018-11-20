@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from pccora import *
 import math
+
+from pccora import *
 
 
 def dump_values(obj):
@@ -20,8 +21,21 @@ def dump_array_values(obj, elapsed_time):
             nu = container['n_data']
             c = container['cycles']
             print("%s\t%s\t%.2f %.1f  %.1f\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (
-            i + 1, (ti - elapsed_time), p, t, h, nu, container['c1'], container['c2'], container['c3'], container['c4'],
-            container['c5'], container['c6'], container['c7'], container['c8'], c))
+                i + 1,
+                (ti - elapsed_time),
+                p,
+                t,
+                h,
+                nu,
+                container['c1'],
+                container['c2'],
+                container['c3'],
+                container['c4'],
+                container['c5'],
+                container['c6'],
+                container['c7'],
+                container['c8'],
+                c))
         i = i + 1
 
 

@@ -64,7 +64,7 @@ def convert2netcdf4(data, file):
 
     dataset.setncattr('g.General.SiteWmoId', ident['wmo_block_number'] + ident['wmo_station_number'])
     dataset.setncattr('g.MeasuringSystem.Longitude',
-                      str('N/A' if None == ident['station_longitude'] else ident['station_longitude']) + ' degree east')
+                      str('N/A' if None is ident['station_longitude'] else ident['station_longitude']) + ' degree east')
     dataset.setncattr('g.MeasuringSystem.Latitude', str(ident['station_latitude']) + ' degree north')
     dataset.setncattr('g.MeasuringSystem.Altitude', str(ident['station_altitude']) + ' m')
     dataset.setncattr('g.SurfaceObs.Pressure', str(ident['surface_pressure']) + ' hPa')
@@ -143,7 +143,8 @@ def convert2netcdf4(data, file):
 
     dataset.institution = "MetService New Zealand"
     dataset.datetime = str(ident['datetime'])
-    dataset.comment = 'For more information about the variables see: https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html'
+    dataset.comment = 'For more information about the variables see: ' \
+                      'https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html'
 
     elapsed_time = []
     logarithmic_pressure = []
@@ -339,7 +340,8 @@ def convert2netcdf4(data, file):
     significance_key_variable.standard_name = 'significance_key'
     significance_key_variable.units = 'bit_pattern'
     significance_key_variable.long_name = 'SOND calculated significance key'
-    significance_key_variable.comment = 'See LEVEL TYPE FLAG in https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html'
+    significance_key_variable.comment = 'See LEVEL TYPE FLAG in ' \
+                                        'https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html'
     significance_key_variable.g_format_type = 'CHR'
     significance_key_variable[:] = significance_key
 
@@ -349,7 +351,8 @@ def convert2netcdf4(data, file):
     recalculated_significance_key_variable.standard_name = 'recalculated_significance_key'
     recalculated_significance_key_variable.units = 'bit_pattern'
     recalculated_significance_key_variable.long_name = 'User edited/recalculated significance key'
-    recalculated_significance_key_variable.comment = 'See LEVEL TYPE FLAG in https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html'
+    recalculated_significance_key_variable.comment = 'See LEVEL TYPE FLAG in ' \
+                                                     'https://badc.nerc.ac.uk/data/ukmo-rad-hires/pc-coradata.html'
     recalculated_significance_key_variable.g_format_type = 'FLT'
     recalculated_significance_key_variable[:] = recalculated_significance_key
 

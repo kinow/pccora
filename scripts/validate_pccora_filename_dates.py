@@ -45,9 +45,8 @@ def main():
         ])
 
         if date_within_file != date2:
-            print("Date in identification section does not match with file name: {} - {} and {}".format(filename,
-                                                                                                        date_within_file,
-                                                                                                        date2))
+            print("Date in identification section does not match with file name: "
+                  "{} - {} and {}".format(filename, date_within_file, date2))
 
 
 if __name__ == '__main__':

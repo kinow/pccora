@@ -66,7 +66,8 @@ def print_template(file, ident, hires_data):
 
             significance = ''
             recalculated_significance = ''
-            # recalculated_significance = '' if container['significance_key'] == container['recalculated_significance_key'] else '<>'
+            # recalculated_significance = '' if container['significance_key'] == \
+            #     container['recalculated_significance_key'] else '<>'
 
             entry = "  %2d %2d %8s %8d %9s %6d %6s %13s %12s" % (
                 minute,

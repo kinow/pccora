@@ -24,7 +24,7 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 
-# python directory_batch_convert.py --from ~/Desktop/INVRCRGL/ --to ~/Desktop/output/ > ~/Desktop/pccora.log 2> ~/Desktop/errors.log
+# python directory_batch_convert.py --from ~/Desktop/INVRCRGL/ --to ~/Desktop/output/
 
 def main():
     try:

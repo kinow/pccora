@@ -22,8 +22,8 @@ def dump_values_np_dict(obj, print_item_index=True):
     # e.g. your data structure is name and age, and you have three entries. So
     # the data given will be in the format:
     # {
-    #   name: ['John', 'Stephen'],
-    #	age: [33, 25]
+    #  name: ['John', 'Stephen'],
+    #  age: [33, 25]
     # }
     # where you can view that john has 33 years, and stephen 25
     length = n = 0

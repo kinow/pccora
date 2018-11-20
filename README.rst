@@ -26,14 +26,17 @@ I was asked by a co-worker to look at some Python code with a PC-CORA parser.
 This co-worker also needed further analysis and processing, involving some
 data being created as CSV, netCDF, or plotted.
 
-I decided to write a module for PC-CORA inspired by the original script [1],
+I decided to write a module for PC-CORA inspired by the
+`original script <https://github.com/vnoel/pycode/blob/39bac18dc41497a5a00cbecd6b81ddf205736615/pccora.py>`_,
 but using Python3, OO, and packaging as a Python package to be distributed
 to the `PYPI <https://pypi.org/project/pccora/>`_.
 
 This way we could use it in scripts, or other internal applications. And it
 would also be easier for others to find it and re-use.
 
-[1] https://github.com/vnoel/pycode/blob/master/pccora.py
+The code in this repository was used on a `Doctoral Thesis
+<https://refubium.fu-berlin.de/handle/fub188/22207>`_ published in 2018,
+about radiosonde, GCOS, radio occultation, and weather prediction.
 
 Example
 -------

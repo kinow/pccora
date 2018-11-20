@@ -9,7 +9,7 @@ Hands-on example:
     >>> from pccora import *
     >>> pccora_parser = PCCORAParser()
     >>> cur_dir = os.path.dirname(__file__)
-    >>> in_file = os.path.join(cur_dir, "../tests/", "93011809.21S")
+    >>> in_file = os.path.join(cur_dir, "tests/93011809.21S")
     >>> pccora_parser.parse_file(in_file)
     >>> assert pccora_parser.get_header() is not None
     >>> assert pccora_parser.get_identification() is not None

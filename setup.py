@@ -49,7 +49,7 @@ setup(
     author_email='brunodepaulak@yahoo.com.br',
     license='MIT',
     platforms="any",
-    python_requires=">=3.6",
+    python_requires=">=3.3",
     keywords=['sounding file', 'radiosonde', 'vaisala', 'pccora', 'atmosphere'],
     packages=['pccora'],
     zip_safe=False,

@@ -1,0 +1,43 @@
+{% set name = "pccora" %}
+{% set version = "0.3" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  git_url: https://github.com/kinow/pccora.git
+  git_rev: 0.3
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vvv "
+
+requirements:
+  host:
+    - pip
+    - python
+    - construct ==2.5.1
+    - six
+    - pytest-runner
+  run:
+    - python
+    - construct ==2.5.1
+    - six
+
+test:
+  imports:
+    - pccora
+
+about:
+  home: http://github.com/niwa/pccora
+  license: MIT
+  license_family: MIT
+  license_file: 
+  summary: PC-CORA sounding data files parser for Python
+  doc_url: 
+  dev_url: 
+
+extra:
+  recipe-maintainers:
+    - kinow
